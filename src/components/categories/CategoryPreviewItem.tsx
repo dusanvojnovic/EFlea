@@ -14,7 +14,7 @@ export const CategoryPreviewItem: React.FunctionComponent<
         {categoryName}
       </h1>
       <div className="flex justify-between">
-        <ul className="mb-0 list-none pl-0">
+        <ul className="mb-0 mt-4 list-none pl-0">
           <li>
             <p className="mb-0 pb-0 text-[1.5rem]">item</p>
           </li>
