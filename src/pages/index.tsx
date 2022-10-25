@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { CategoriesPreviewList } from "../components/categories/CategoriesPreviewList";
-import { Header } from "../components/Header/Header";
+import { CategoriesPreviewList } from "../components/Categories/CategoriesPreviewList";
 
 const categories = [
   "antiques",
