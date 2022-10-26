@@ -27,12 +27,16 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const [passwordIsVisible, setPasswordIsVisible] = useState<boolean>(false);
+    const [userIsTyping, setUserIsTyping] = useState<boolean>(false);
 
     return (
       <div className="flex p-4 text-[1.5rem]">
         {element === "input" ? (
           <input
-            onChange={onChange}
+            onChange={() => {
+              onChange;
+              setUserIsTyping(true);
+            }}
             className="w-full rounded-md border-solid border-color-blue p-4"
             type={isPasswordField && !passwordIsVisible ? "password" : "text"}
             placeholder={placeholder}
@@ -44,7 +48,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <textarea id={id} name={id} placeholder={placeholder} rows={6} />
         )}
 
-        {isPasswordField ? (
+        {isPasswordField && userIsTyping ? (
           <IconContext.Provider value={{ size: "1.5rem", color: "black" }}>
             <i
               onClick={() => setPasswordIsVisible(!passwordIsVisible)}

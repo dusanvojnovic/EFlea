@@ -28,7 +28,7 @@ export const LoginForm: React.FunctionComponent = () => {
           console.log(values);
         }}
       >
-        {({ isSubmitting, isValid, dirty, handleChange, errors, touched }) => (
+        {({ isSubmitting, isValid, handleChange, errors, touched }) => (
           <Form>
             <Input
               id="email"
@@ -49,7 +49,7 @@ export const LoginForm: React.FunctionComponent = () => {
               name="password"
               type="password"
               placeholder="Password"
-              isPasswordField={dirty.valueOf()}
+              isPasswordField
             />
             {touched.password && errors.password ? (
               <div className="pl-4 text-[1.4rem] text-red-400">
