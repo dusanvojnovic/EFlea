@@ -10,7 +10,7 @@ export const CategoryPreviewItem: React.FunctionComponent<
 > = ({ categoryName }) => {
   return (
     // <div className="flex w-[80vw] flex-col lg:w-[35rem]">
-    <div className="mx-auto mb-12 flex w-[80%] flex-col md:w-[45%]">
+    <div className="mx-auto mb-12 flex w-[80%] flex-col lg:w-[45%]">
       <h1 className="mb-0 border-b-2 border-dotted border-red text-[2.75rem] font-bold">
         {categoryName}
       </h1>
