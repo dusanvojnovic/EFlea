@@ -13,7 +13,7 @@ export const SearchBox: React.FunctionComponent = () => {
 
   return (
     <form
-      className="mx-auto mt-[10rem] mb-0 flex w-[50rem] justify-between self-center rounded-md bg-gray-300 p-6"
+      className="bg-gray-300 mx-auto mt-[10rem] mb-0 flex w-[50rem] justify-between self-center rounded-md p-6"
       onSubmit={search}
     >
       <input
@@ -24,7 +24,7 @@ export const SearchBox: React.FunctionComponent = () => {
       />
       <button
         type="submit"
-        className="w-[6.5rem] cursor-pointer rounded-md border-[2px] border-color-violet-light text-[1.3rem]"
+        className="w-[6.5rem] cursor-pointer rounded-md border-[2px] border-red text-[1.3rem]"
       >
         Search
       </button>
