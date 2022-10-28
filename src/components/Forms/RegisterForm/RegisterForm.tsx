@@ -39,7 +39,7 @@ const validationSchema = Yup.object().shape({
 
 export const RegisterForm: React.FunctionComponent = () => {
   return (
-    <div className="mx-auto my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-color-blue bg-gray-200 p-8 ">
+    <div className="bg-gray-200 mx-auto my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-8 ">
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -56,7 +56,7 @@ export const RegisterForm: React.FunctionComponent = () => {
               onChange={handleChange}
             />
             {touched.firstName && errors.firstName ? (
-              <div className="pl-4 text-[1.4rem] text-red-400">
+              <div className="text-red-400 pl-4 text-[1.4rem]">
                 {errors.firstName}
               </div>
             ) : null}
@@ -67,7 +67,7 @@ export const RegisterForm: React.FunctionComponent = () => {
               onChange={handleChange}
             />
             {touched.lastName && errors.lastName ? (
-              <div className="pl-4 text-[1.4rem] text-red-400">
+              <div className="text-red-400 pl-4 text-[1.4rem]">
                 {errors.lastName}
               </div>
             ) : null}
@@ -79,7 +79,7 @@ export const RegisterForm: React.FunctionComponent = () => {
               onChange={handleChange}
             />
             {touched.email && errors.email ? (
-              <div className="pl-4 text-[1.4rem] text-red-400">
+              <div className="text-red-400 pl-4 text-[1.4rem]">
                 {errors.email}
               </div>
             ) : null}
@@ -90,7 +90,7 @@ export const RegisterForm: React.FunctionComponent = () => {
               onChange={handleChange}
             />
             {touched.city && errors.city ? (
-              <div className="pl-4 text-[1.4rem] text-red-400">
+              <div className="text-red-400 pl-4 text-[1.4rem]">
                 {errors.city}
               </div>
             ) : null}
@@ -103,7 +103,7 @@ export const RegisterForm: React.FunctionComponent = () => {
               isPasswordField
             />
             {touched.password && errors.password ? (
-              <div className="pl-4 text-[1.4rem] text-red-400">
+              <div className="text-red-400 pl-4 text-[1.4rem]">
                 {errors.password}
               </div>
             ) : null}
@@ -116,12 +116,12 @@ export const RegisterForm: React.FunctionComponent = () => {
               isPasswordField
             />
             {touched.passwordConfirmed && errors.passwordConfirmed ? (
-              <div className="pl-4 text-[1.4rem] text-red-400">
+              <div className="text-red-400 pl-4 text-[1.4rem]">
                 {errors.passwordConfirmed}
               </div>
             ) : null}
             <button
-              className="mx-auto my-8 flex w-[80%] cursor-pointer justify-center self-center rounded-md border-none bg-color-violet p-4 text-[1.5rem] text-white hover:bg-color-violet-light disabled:cursor-not-allowed"
+              className="mx-auto my-8 flex w-[80%] cursor-pointer justify-center self-center rounded-md border-none bg-red p-4 text-[1.5rem] text-white hover:bg-red disabled:cursor-not-allowed"
               type="submit"
               disabled={!isValid}
             >
@@ -134,7 +134,7 @@ export const RegisterForm: React.FunctionComponent = () => {
         <p>
           Already have account? Login &nbsp;
           <Link href="/login">
-            <a className="text-color-blue">here</a>
+            <a className="text-green">here</a>
           </Link>
         </p>
       </div>

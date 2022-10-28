@@ -37,7 +37,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               onChange;
               setUserIsTyping(true);
             }}
-            className="w-full rounded-md border-solid border-color-blue p-4"
+            className="w-full rounded-md border-solid border-green p-4"
             type={isPasswordField && !passwordIsVisible ? "password" : "text"}
             placeholder={placeholder}
             id={id}

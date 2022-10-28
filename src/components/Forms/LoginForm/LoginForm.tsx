@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
 
 export const LoginForm: React.FunctionComponent = () => {
   return (
-    <div className="mx-auto my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-color-blue bg-gray-200 p-8">
+    <div className="bg-gray-200 mx-auto my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-8">
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -38,7 +38,7 @@ export const LoginForm: React.FunctionComponent = () => {
               onChange={handleChange}
             />
             {touched.email && errors.email ? (
-              <div className="pl-4 text-[1.4rem] text-red-400">
+              <div className="text-red-400 pl-4 text-[1.4rem]">
                 {errors.email}
               </div>
             ) : null}
@@ -52,13 +52,13 @@ export const LoginForm: React.FunctionComponent = () => {
               isPasswordField
             />
             {touched.password && errors.password ? (
-              <div className="pl-4 text-[1.4rem] text-red-400">
+              <div className="text-red-400 pl-4 text-[1.4rem]">
                 {errors.password}
               </div>
             ) : null}
 
             <button
-              className="mx-auto my-8 flex w-[80%] cursor-pointer justify-center self-center rounded-md border-none bg-color-violet p-4 text-[1.5rem] text-white hover:bg-color-violet-light disabled:cursor-not-allowed"
+              className="mx-auto my-8 flex w-[80%] cursor-pointer justify-center self-center rounded-md border-none bg-red p-4 text-[1.5rem] text-white hover:bg-red disabled:cursor-not-allowed"
               type="submit"
               disabled={!isValid}
             >
@@ -70,13 +70,13 @@ export const LoginForm: React.FunctionComponent = () => {
       <div className="self-center text-[1.5rem]">
         <p style={{ textAlign: "center" }}>
           <Link href="/login">
-            <a className="text-color-blue">Forgotten password?</a>
+            <a className="text-green">Forgotten password?</a>
           </Link>
         </p>
         <p>
           Dont have account? Register &nbsp;
           <Link href="/register">
-            <a className="text-color-blue">here</a>
+            <a className="text-green">here</a>
           </Link>
         </p>
       </div>
