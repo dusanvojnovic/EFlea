@@ -48,8 +48,8 @@ export const CategoryPreviewItem: React.FunctionComponent<
               <p className="mb-0 pb-0 text-[1.75rem]">item</p>
             </li>
           </ul>
-          <Link href={`/categories/${categoryName}`}>
-            <button className="self-end rounded-md bg-red px-4 py-2 text-[1.3rem] text-white hover:bg-red">
+          <Link href={`/category/${categoryName}`}>
+            <button className="self-end rounded-md bg-red px-6 py-2 text-[1.3rem] text-white hover:bg-red">
               see all
             </button>
           </Link>
