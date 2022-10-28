@@ -10,7 +10,7 @@ module.exports = {
         red: "#B91646",
       },
       gridTemplateColumns: {
-        fluid: "repeat(auto-fit, minmax(30rem, 1fr))",
+        fluid: "repeat(auto-fit, minmax(35rem, 1fr))",
       },
       screens: {
         xs: { min: "400px" },
