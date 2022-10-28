@@ -12,6 +12,9 @@ module.exports = {
       gridTemplateColumns: {
         fluid: "repeat(auto-fit, minmax(30rem, 1fr))",
       },
+      screens: {
+        xs: { min: "400px" },
+      },
       keyframes: {
         "grow-down": {
           "0%": { transform: "scaleY(0)" },
