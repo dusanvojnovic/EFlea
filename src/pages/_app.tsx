@@ -14,6 +14,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <Layout>
         <Component {...pageProps} />
+        <div id="overlays" />
+        <div id="backdrop" />
       </Layout>
     </SessionProvider>
   );
