@@ -20,9 +20,9 @@ export const ItemPreview: React.FunctionComponent<ItemPreviewProps> = ({
   pictureUrl,
 }) => {
   return (
-    <div className="mb-10 flex flex-col rounded-md border border-red">
-      <Link href={`/categories/${category}/${id}`}>
-        <div className="flex cursor-pointer items-center justify-between bg-red p-4 text-light">
+    <div className="flex flex-col rounded-md border border-red">
+      <Link href={`/category/${category}/${id}`}>
+        <div className="flex cursor-pointer items-center justify-between bg-red px-4 py-2 text-light">
           <h1 className="text-[2rem]">{title}</h1>
           <h2 className="text-2xl">{price} $</h2>
         </div>
