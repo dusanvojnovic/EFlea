@@ -14,6 +14,7 @@ module.exports = {
       },
       screens: {
         xs: { min: "400px" },
+        s: { min: "500px" },
       },
       keyframes: {
         "grow-down": {
