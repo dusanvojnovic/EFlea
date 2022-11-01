@@ -6,7 +6,7 @@ export const Header: React.FunctionComponent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   return (
-    <header className="fixed top-0 left-0 z-50 h-[4.5rem] w-full bg-green text-[1.75rem] text-white">
+    <header className="fixed top-0 left-0 z-30 h-[4.5rem] w-full bg-green text-[1.75rem] text-white">
       <div className="flex justify-between py-[1rem] px-[3rem]">
         <Link href="/">
           <a>E-Flea</a>

@@ -12,7 +12,7 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({
   return ReactDOM.createPortal(
     <div
       onClick={onClick}
-      className="fixed inset-0 z-10 h-full w-full bg-black/95"
+      className="fixed inset-0 z-40 h-full w-full bg-black/95"
     />,
     document.getElementById("backdrop")!
   );
