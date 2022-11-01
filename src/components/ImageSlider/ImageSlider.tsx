@@ -31,7 +31,7 @@ export const ImageSlider: React.FunctionComponent<ImageSliderProps> = ({
 
   return (
     <div className="flex min-h-[100vh] items-center justify-center">
-      <div className="relative z-30 my-0 mx-auto max-w-[1000px]">
+      <div className="relative z-50 my-0 mx-auto max-w-[1000px]">
         {images.map((image, index) => {
           return (
             <div
