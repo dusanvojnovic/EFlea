@@ -14,7 +14,9 @@ export const ItemsList: React.FunctionComponent<ItemsListProps> = ({
   return (
     <>
       <div className="my-32 flex flex-col items-center">
-        <h1 className="mb-14 text-[2.5rem] capitalize">{category}</h1>
+        {category ? (
+          <h1 className="mb-14 text-[2.5rem] capitalize">{category}</h1>
+        ) : null}
         <div className="grid w-[90vw] grid-cols-fluid gap-20 sm:mx-auto md:w-[55vw]">
           <ItemPreview
             category={category}

@@ -11,11 +11,8 @@ const CategoryPage: React.FunctionComponent<CategoryPageProps> = ({}) => {
   const { category } = router.query;
 
   return (
-    <div>
-      <h1>{category}</h1>
-      <div>
-        <ItemsList category={category as string} />
-      </div>
+    <div className="mx-auto my-0 flex flex-col">
+      <ItemsList category={category as string} />
     </div>
   );
 };
