@@ -6,7 +6,7 @@ import { Layout } from "../../components/Layout/Layout";
 const UserPage: React.FunctionComponent = ({}) => {
   return (
     <Layout>
-      <Link href="">
+      <Link href="/new-item">
         <button className="self-center rounded-md bg-red p-4 text-2xl text-light">
           add new item
         </button>
