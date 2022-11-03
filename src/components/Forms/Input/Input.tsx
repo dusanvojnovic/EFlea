@@ -37,7 +37,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               onChange;
               setUserIsTyping(true);
             }}
-            className="w-full rounded-md border-solid border-green p-4"
+            className="w-full rounded-md border border-solid border-green p-4"
             type={isPasswordField && !passwordIsVisible ? "password" : "text"}
             placeholder={placeholder}
             id={id}
@@ -45,7 +45,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
         ) : (
-          <textarea id={id} name={id} placeholder={placeholder} rows={6} />
+          <textarea
+            className="w-full border border-solid border-green p-4"
+            id={id}
+            name={id}
+            placeholder={placeholder}
+            rows={8}
+          />
         )}
 
         {isPasswordField && userIsTyping ? (
