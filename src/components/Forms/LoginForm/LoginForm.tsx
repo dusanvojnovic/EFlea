@@ -1,72 +1,65 @@
 import Link from "next/link";
 import React from "react";
 import { Input } from "../Input/Input";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-
-const initialValues = {
-  email: "",
-  password: "",
-};
-
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Please provide valid email address")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters long")
-    .required("Password is required"),
-});
+import { FieldValues, useForm } from "react-hook-form";
 
 export const LoginForm: React.FunctionComponent = () => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, dirtyFields },
+  } = useForm<FieldValues>({
+    reValidateMode: "onSubmit",
+    defaultValues: {
+      password: "",
+    },
+  });
+
+  const onSubmit = (data: any) => {
+    console.log(data);
+    reset();
+  };
+
   return (
     <div className="bg-gray-200 mx-auto my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-8">
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={(values, { setErrors }) => {
-          console.log(values);
-        }}
-      >
-        {({ isSubmitting, isValid, handleChange, errors, touched }) => (
-          <Form>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Email"
-              onChange={handleChange}
-            />
-            {touched.email && errors.email ? (
-              <div className="text-red-400 pl-4 text-[1.4rem]">
-                {errors.email}
-              </div>
-            ) : null}
-
-            <Input
-              onChange={handleChange}
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Password"
-              isPasswordField
-            />
-            {touched.password && errors.password ? (
-              <div className="text-red-400 pl-4 text-[1.4rem]">
-                {errors.password}
-              </div>
-            ) : null}
-
-            <button
-              className="mx-auto my-8 flex w-[80%] cursor-pointer justify-center self-center rounded-md border-none bg-red p-4 text-[1.5rem] text-white hover:bg-red disabled:cursor-not-allowed"
-              type="submit"
-              disabled={!isValid}
-            >
-              Login
-            </button>
-          </Form>
-        )}
-      </Formik>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Input
+          name="email"
+          placeholder="Email"
+          register={register}
+          validationSchema={{
+            required: "Email is required",
+            pattern: {
+              message: "Enter valid email address",
+              value:
+                /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+            },
+          }}
+          errors={errors}
+        />
+        <Input
+          name="password"
+          isPasswordField
+          isDirty={dirtyFields.password}
+          placeholder="Password"
+          register={register}
+          validationSchema={{
+            required: "Password is required",
+            minLength: {
+              value: 8,
+              message: "Password must be at least 8 characters long",
+            },
+          }}
+          errors={errors}
+        />
+        <button
+          className="mx-auto my-8 flex w-[80%] cursor-pointer justify-center self-center rounded-md border-none bg-red p-4 text-[1.5rem] text-white hover:bg-red disabled:cursor-not-allowed"
+          type="submit"
+        >
+          Login
+        </button>
+      </form>
       <div className="self-center text-[1.5rem]">
         <p style={{ textAlign: "center" }}>
           <Link href="/login">
@@ -76,7 +69,7 @@ export const LoginForm: React.FunctionComponent = () => {
         <p>
           Dont have account? Register &nbsp;
           <Link href="/register">
-            <a className="text-green">here</a>
+            <a className="text-green">here.</a>
           </Link>
         </p>
       </div>
