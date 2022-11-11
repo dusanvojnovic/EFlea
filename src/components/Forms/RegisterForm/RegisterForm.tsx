@@ -24,7 +24,7 @@ export const RegisterForm: React.FunctionComponent = () => {
   };
 
   return (
-    <div className="bg-gray-200 mx-auto my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-8 ">
+    <div className="bg-gray-200 mx-auto my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-12">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input
           name="firstName"
