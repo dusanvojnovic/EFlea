@@ -1,102 +1,148 @@
-import { Form, Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
+import { useForm, FieldValues } from "react-hook-form";
 import { Input } from "../Input/Input";
-import * as Yup from "yup";
+import { Select } from "../Select/Select";
 
-const initialValues = {
-  title: "",
-  category: "",
-  description: "",
-  price: "",
-  images: [],
-};
-
-const validationSchema = Yup.object().shape({
-  title: Yup.string()
-    .min(2, "Item's title must be at least 2 characters long")
-    .required("Item's name is required"),
-  category: Yup.string()
-    .min(2, "Last name must be at least 2 characters long")
-    .required("Last name is required"),
-  description: Yup.string()
-    .min(20, "Description must be at least 20 characters long")
-    .required("Description is required"),
-  price: Yup.string().required("Price is required"),
-  images: Yup.array().required("Please provide at least one image"),
-});
+const options = [
+  "antiques",
+  "bicycles",
+  "books and comics",
+  "clothes",
+  "computers",
+  "games and toys",
+  "garden and yard",
+  "home appliances",
+  "music and music gear",
+  "photo cameras",
+  "shoes",
+  "telephones",
+  "tools and equipment",
+  "watches",
+  "other",
+];
 
 export const AddNewItemForm: React.FunctionComponent = () => {
-  return (
-    <div className="bg-gray-200 mx-auto	my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-8 ">
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={(values, { setErrors }) => {
-          console.log(values);
-        }}
-      >
-        {({ isSubmitting, isValid, dirty, handleChange, errors, touched }) => (
-          <Form>
-            <Input
-              id="title"
-              placeholder="Title"
-              name="title"
-              onChange={handleChange}
-            />
-            {touched.title && errors.title ? (
-              <div className="text-red-400 pl-4 text-[1.4rem]">
-                {errors.title}
-              </div>
-            ) : null}
-            <select
-              id="category"
-              name="category"
-              onChange={handleChange}
-              className="box-border w-full rounded-md border-solid border-green p-4 text-[1.5rem]"
-            >
-              <option value="">Select a Category</option>
-              <option value="red">red</option>
-              <option value="blue">blue</option>
-              <option value="green">green</option>
-            </select>
-            {errors.category && (
-              <div className="input-feedback">{errors.category}</div>
-            )}
-            <Input
-              element="textarea"
-              id="description"
-              placeholder="Describe Item..."
-              name="description"
-              onChange={handleChange}
-            />
-            {touched.description && errors.description ? (
-              <div className="text-red-400 pl-4 text-[1.4rem]">
-                {errors.description}
-              </div>
-            ) : null}
-            <Input
-              id="price"
-              placeholder="Price"
-              name="price"
-              type="price"
-              onChange={handleChange}
-            />
-            {touched.price && errors.price ? (
-              <div className="text-red-400 pl-4 text-[1.4rem]">
-                {errors.price}
-              </div>
-            ) : null}
+  const [images, setImages] = useState<any>();
 
-            <button
-              className="mx-auto my-8 flex w-[80%] cursor-pointer justify-center self-center rounded-md border-none bg-red p-4 text-[1.5rem] text-white hover:bg-red disabled:cursor-not-allowed"
-              type="submit"
-              disabled={!isValid}
-            >
-              Add Item
-            </button>
-          </Form>
-        )}
-      </Formik>
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    reset,
+    formState: { errors },
+  } = useForm<FieldValues>({ reValidateMode: "onSubmit" });
+
+  const onSubmit = (data: any) => {
+    const formData = new FormData();
+    // const images = getValues("root.images");
+
+    formData.append("images", data.images[0]);
+    // formData.append("images", images);
+    console.log("data", data);
+    reset();
+  };
+
+  // const getFiles = () => {
+  //   const files = (
+  //     (document.getElementById("itemImages") as HTMLInputElement) || null
+  //   ).files;
+  //   const imagesArray = [];
+  //   let image = {};
+
+  //   if (!files) return;
+  //   for (let i = 0; i < files.length; i++) {
+  //     image = {
+  //       name: files[i]?.name,
+  //       size: files[i]?.size,
+  //     };
+
+  //     imagesArray.push(image);
+  //   }
+  //   console.log(JSON.stringify(imagesArray));
+  // };
+
+  // const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  // if (e.target.files) {
+  //   const imageArray = Array.from(e.target.files).map((file) =>
+  //     URL.createObjectURL(file)
+  //   );
+  //   setImages((prevImages: any) => [...prevImages, imageArray]);
+  // }
+  // };
+
+  return (
+    <div className="bg-gray-200 mx-auto	my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-12 ">
+      <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+        <Input
+          name="title"
+          placeholder="Title"
+          register={register}
+          validationSchema={{
+            required: "Title is required",
+            minLength: {
+              value: 3,
+              message: "Title name must be at least 3 characters long",
+            },
+          }}
+          errors={errors}
+        />
+
+        <Select
+          register={register}
+          name="category"
+          options={options}
+          validationSchema={{ required: "You must select category" }}
+        />
+
+        <Input
+          element="textarea"
+          name="description"
+          placeholder="Describe item..."
+          register={register}
+          validationSchema={{
+            required: "Description is required",
+            minLength: {
+              value: 20,
+              message: "Description must be at least 20 characters long",
+            },
+          }}
+          errors={errors}
+        />
+        <Input
+          name="price"
+          placeholder="Price"
+          register={register}
+          validationSchema={{
+            required: "Price is required",
+          }}
+          errors={errors}
+        />
+        {/* <input
+          type="file"
+          id="itemImages"
+          onChange={getFiles}
+          required
+          multiple
+        /> */}
+        {/* <Input
+          element="file"
+          name="images"
+          register={register}
+          errors={errors}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setValue("images", e.target.files)
+          }
+        /> */}
+
+        <button
+          className="mx-auto my-8 flex w-[80%] cursor-pointer justify-center self-center rounded-md border-none bg-red p-4 text-[1.5rem] text-white hover:bg-red disabled:cursor-not-allowed"
+          type="submit"
+        >
+          add item
+        </button>
+      </form>
     </div>
   );
 };

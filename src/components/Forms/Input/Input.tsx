@@ -11,10 +11,11 @@ import {
 
 interface InputProps {
   element?: string;
-  placeholder: string;
+  placeholder?: string;
   name: string;
   type?: string;
   isPasswordField?: boolean;
+  onChange?: any;
   register: UseFormRegister<FieldValues>;
   validationSchema?: {
     validate?: { passwordEqual: (val: string) => boolean | string };
@@ -35,6 +36,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       isPasswordField = false,
       name,
       register,
+      onChange,
       validationSchema,
       isDirty = false,
       errors,
@@ -45,28 +47,40 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const [passwordIsVisible, setPasswordIsVisible] = useState<boolean>(false);
 
     return (
-      <div className="flex flex-col p-4 text-[1.5rem]">
-        {element === "input" ? (
+      <div className="box-border flex flex-col py-4 px-0 text-[1.5rem]">
+        {element === "input" && (
           <input
-            className="relative w-full rounded-md border border-solid border-green p-4"
+            className="relative box-border w-full rounded-md border border-solid border-green p-4 px-4"
             type={isPasswordField && !passwordIsVisible ? "password" : "text"}
             placeholder={placeholder}
             id={name}
             {...register(name, validationSchema)}
             {...props}
           />
-        ) : (
+        )}
+        {element === "textarea" && (
           <textarea
-            className="w-full border border-solid border-green p-4"
-            name={name}
+            className="w-full rounded-md border border-solid border-green p-4"
+            id={name}
             placeholder={placeholder}
             rows={8}
+            {...register(name, validationSchema)}
+            {...props}
+          />
+        )}
+        {element === "file" && (
+          <input
+            type="file"
+            {...register(name)}
+            name={name}
+            id={name}
+            multiple
+            onChange={onChange}
           />
         )}
         {errors && (
           <p className="pt-2 text-[1.4rem] text-red">{errors[name]?.message}</p>
         )}
-
         {isPasswordField && isDirty ? (
           <IconContext.Provider value={{ size: "1.5rem", color: "black" }}>
             <i
