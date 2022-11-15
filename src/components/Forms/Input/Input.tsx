@@ -13,10 +13,9 @@ interface InputProps {
   element?: string;
   placeholder?: string;
   name: string;
-  type?: string;
   isPasswordField?: boolean;
-  onChange?: any;
   register: UseFormRegister<FieldValues>;
+  onChange?: (e?: React.ChangeEvent<HTMLInputElement>) => void;
   validationSchema?: {
     validate?: { passwordEqual: (val: string) => boolean | string };
     required?: Message | ValidationRule<boolean>;
@@ -32,7 +31,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     {
       element = "input",
       placeholder,
-      type = "text",
       isPasswordField = false,
       name,
       register,
@@ -42,6 +40,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       errors,
       ...props
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ref
   ) => {
     const [passwordIsVisible, setPasswordIsVisible] = useState<boolean>(false);
