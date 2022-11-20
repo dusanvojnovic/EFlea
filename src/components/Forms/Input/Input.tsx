@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { IconContext } from "react-icons";
 import {
@@ -12,17 +12,19 @@ import {
 interface InputProps {
   element?: string;
   placeholder?: string;
+  value?: string;
+  label?: string;
   name: string;
   isPasswordField?: boolean;
   register: UseFormRegister<FieldValues>;
-  onChange?: (e?: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   validationSchema?: {
     validate?: { passwordEqual: (val: string) => boolean | string };
     required?: Message | ValidationRule<boolean>;
     minLength?: ValidationRule<number>;
     pattern?: ValidationRule<RegExp>;
   };
-  errors: Partial<FieldErrorsImpl<{ [x: string]: string }>>;
+  errors?: Partial<FieldErrorsImpl<{ [x: string]: string }>>;
   isDirty?: boolean;
 }
 
@@ -33,6 +35,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       placeholder,
       isPasswordField = false,
       name,
+      value,
+      label,
       register,
       onChange,
       validationSchema,
@@ -76,6 +80,19 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             multiple
             onChange={onChange}
           />
+        )}
+        {element === "radio" && (
+          <div className="flex">
+            <input
+              type="radio"
+              {...register(name)}
+              name={name}
+              id={name}
+              value={value}
+              onChange={onChange}
+            />
+            <label className="ml-4">{label}</label>
+          </div>
         )}
         {errors && (
           <p className="pt-2 text-[1.4rem] text-red">{errors[name]?.message}</p>
