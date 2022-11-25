@@ -1,13 +1,14 @@
 import Link from "next/link";
 import React from "react";
 import { Input } from "../Input/Input";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
+import { LoginUserInput } from "../../../schema/user.schema";
 
 export const LoginForm: React.FunctionComponent = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, dirtyFields },
   } = useForm<FieldValues>({
     reValidateMode: "onSubmit",
@@ -16,14 +17,13 @@ export const LoginForm: React.FunctionComponent = () => {
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    reset();
+  const onSubmit = async (data: LoginUserInput) => {
+    await signIn("credentials", { ...data, callbackUrl: "/" });
   };
 
   return (
     <div className="bg-gray-200 mx-auto my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-12">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)}>
         <Input
           name="email"
           placeholder="Email"
