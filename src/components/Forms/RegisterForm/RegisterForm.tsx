@@ -1,13 +1,15 @@
 import Link from "next/link";
 import React from "react";
 import { Input } from "../Input/Input";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { trpc } from "../../../utils/trpc";
+import { CreateUserInput } from "../../../schema/user.schema";
+import { useRouter } from "next/router";
 
 export const RegisterForm: React.FunctionComponent = () => {
   const {
     register,
     handleSubmit,
-    reset,
     getValues,
     formState: { errors, dirtyFields },
   } = useForm<FieldValues>({
@@ -18,14 +20,18 @@ export const RegisterForm: React.FunctionComponent = () => {
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    reset();
+  const router = useRouter();
+
+  const { mutateAsync } = trpc.user.registerUser.useMutation();
+
+  const onSubmit = async (data: CreateUserInput) => {
+    await mutateAsync({ ...data });
+    router.push("/");
   };
 
   return (
     <div className="bg-gray-200 mx-auto my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-12">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)}>
         <Input
           name="firstName"
           placeholder="First Name"
@@ -112,7 +118,7 @@ export const RegisterForm: React.FunctionComponent = () => {
           className="mx-auto my-8 flex w-[80%] cursor-pointer justify-center self-center rounded-md border-none bg-red p-4 text-[1.5rem] text-white hover:bg-red disabled:cursor-not-allowed"
           type="submit"
         >
-          Login
+          Register
         </button>
       </form>
       <div className="self-center text-[1.5rem]">

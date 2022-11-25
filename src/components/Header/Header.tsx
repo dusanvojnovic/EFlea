@@ -1,11 +1,11 @@
 import Link from "next/link";
 import React, { useRef, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 
 export const Header: React.FunctionComponent = () => {
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
+  const { data: session } = useSession();
 
   function closeDropdownMenu(e: MouseEvent) {
     if (
@@ -15,6 +15,10 @@ export const Header: React.FunctionComponent = () => {
     ) {
       setDropdownVisible(false);
     }
+  }
+
+  function logout() {
+    signOut({ callbackUrl: "/login" });
   }
 
   if (typeof window !== "undefined") {
@@ -27,7 +31,7 @@ export const Header: React.FunctionComponent = () => {
         <Link href="/">
           <a>E-Flea</a>
         </Link>
-        {isLoggedIn ? (
+        {!session ? (
           <div className="cursor-pointer">
             <Link href="/register">
               <a className="mx-[1rem]">Register</a>
@@ -56,7 +60,10 @@ export const Header: React.FunctionComponent = () => {
               <li className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]">
                 Edit Account
               </li>
-              <li className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]">
+              <li
+                className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]"
+                onClick={logout}
+              >
                 Logout
               </li>
             </ul>
