@@ -1,4 +1,4 @@
-import z, { string } from "zod";
+import z from "zod";
 
 export const createUserSchema = z.object({
   firstName: z.string(),
@@ -13,7 +13,7 @@ export type CreateUserInput = z.TypeOf<typeof createUserSchema>;
 
 export const loginUserSchema = z.object({
   email: z.string().email(),
-  password: string(),
+  password: z.string(),
 });
 
 export type LoginUserInput = z.TypeOf<typeof loginUserSchema>;
