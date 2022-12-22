@@ -9,7 +9,7 @@ export const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
   return (
     <>
       <Header />
-      <div className="my-20 mx-auto flex flex-col">{children}</div>
+      <div className="mx-auto mt-20 flex flex-col">{children}</div>
     </>
   );
 };
