@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { useState } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { IconContext } from "react-icons";
 import {
@@ -14,10 +14,12 @@ interface InputProps {
   placeholder?: string;
   value?: string;
   label?: string;
+  checked?: boolean;
   name: string;
   isPasswordField?: boolean;
   register: UseFormRegister<FieldValues>;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+
+  onChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   validationSchema?: {
     validate?: { passwordEqual: (val: string) => boolean | string };
     required?: Message | ValidationRule<boolean>;
@@ -38,6 +40,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       value,
       label,
       register,
+      checked,
       onChange,
       validationSchema,
       isDirty = false,
@@ -57,8 +60,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             type={isPasswordField && !passwordIsVisible ? "password" : "text"}
             placeholder={placeholder}
             id={name}
+            value={value}
             {...register(name, validationSchema)}
             {...props}
+            onChange={onChange}
           />
         )}
         {element === "textarea" && (
@@ -67,8 +72,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={name}
             placeholder={placeholder}
             rows={8}
+            value={value}
             {...register(name, validationSchema)}
             {...props}
+            onChange={onChange}
           />
         )}
         {element === "file" && (
@@ -90,6 +97,20 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               id={name}
               value={value}
               onChange={onChange}
+            />
+            <label className="ml-4">{label}</label>
+          </div>
+        )}
+        {element === "checkbox" && (
+          <div className="flex">
+            <input
+              type="checkbox"
+              {...register(name)}
+              name={name}
+              id={name}
+              value={value}
+              onChange={onChange}
+              checked={checked}
             />
             <label className="ml-4">{label}</label>
           </div>
