@@ -7,14 +7,14 @@ generator client {
 }
 
 datasource db {
-  provider             = "mysql"
+  provider          = "mysql"
   // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
   // Further reading:
   // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-  url                  = env("DATABASE_URL")
-  shadowDatabaseUrl    = env("SHADOW_URL")
-  referentialIntegrity = "prisma"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_URL")
+  relationMode      = "prisma"
 }
 
 model Example {
@@ -40,6 +40,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -48,6 +49,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -61,6 +64,7 @@ model User {
   updatedAt DateTime  @default(now())
   accounts  Account[]
   sessions  Session[]
+  items     Item[]
 }
 
 model VerificationToken {
@@ -69,4 +73,28 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Item {
+  id             String  @id @default(cuid())
+  title          String
+  category       String
+  description    String
+  price          String
+  acceptExchange Boolean
+  fixedPrice     Boolean
+  images         Image[]
+  user           User    @relation(fields: [userId], references: [id])
+  userId         String
+
+  @@index([userId])
+}
+
+model Image {
+  id     String  @id @default(cuid())
+  url    String
+  Item   Item?   @relation(fields: [itemId], references: [id])
+  itemId String?
+
+  @@index([itemId])
 }
