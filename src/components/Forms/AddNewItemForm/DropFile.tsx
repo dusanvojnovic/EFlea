@@ -13,6 +13,7 @@ export const DropFile: React.FunctionComponent<
   Partial<ItemType> & UpdateFields
 > = ({ updateFields, imgFiles }) => {
   const [images, setImages] = useState<any>([]);
+  const [i, setI] = useState<any>([]);
   const [imageFiles, setImageFiles] = useState<any>(imgFiles);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadingDone, setUploadingDone] = useState<boolean>(false);
@@ -20,7 +21,7 @@ export const DropFile: React.FunctionComponent<
   const [dragEnter, setDragEnter] = useState<boolean>(false);
   const wrapperRef = useRef(null);
 
-  const { mutateAsync: addImage } = trpc.item.addImage.useMutation();
+  // const { mutateAsync: addItem } = trpc.item.addItem.useMutation();
 
   const onDragEnter = () => {
     setDragEnter(true);
@@ -37,7 +38,7 @@ export const DropFile: React.FunctionComponent<
   const uploadImages = (files: any) => {
     const promises: any[] = [];
     // const imageUrls: string[] = [];
-    const imageUrls: any = [];
+    const imageUrls: string[] = [];
     files.map((image: any) => {
       const imageRef = ref(storage, `images/${v4()}`);
       const uploadTask = uploadBytesResumable(imageRef, image);
@@ -57,8 +58,7 @@ export const DropFile: React.FunctionComponent<
         },
         async () => {
           await getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-            imageUrls.push({ url });
-            // setUrls((prevState) => [...prevState, url]);
+            imageUrls.push(url);
           });
         }
       );

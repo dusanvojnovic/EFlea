@@ -16,7 +16,7 @@ const INITIAL_DATA: ItemType = {
   price: "",
   description: "",
   imgFiles: [],
-  imagesUrl: [],
+  imagesUrl: "",
   acceptExchange: false,
   fixedPrice: false,
 };
@@ -64,7 +64,7 @@ export const NewForm: React.FunctionComponent = () => {
       setFormIsValid(false);
     }
     if (formIsValid) {
-      addItem(data);
+      addItem({ ...data, imagesUrl: data.imagesUrl.toString() });
     } else {
       console.log("invalid form");
     }
