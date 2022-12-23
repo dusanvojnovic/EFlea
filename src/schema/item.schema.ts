@@ -9,7 +9,7 @@ export const addItemSchema = z.object({
   acceptExchange: z.boolean(),
   fixedPrice: z.boolean(),
   imgFiles: z.any().nullish(),
-  imagesUrl: z.array(z.string()),
+  imagesUrl: z.array(z.string()).or(z.string()),
 });
 
 export type ItemType = z.TypeOf<typeof addItemSchema>;
