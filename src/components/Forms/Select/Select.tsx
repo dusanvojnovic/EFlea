@@ -3,6 +3,7 @@ import { FieldValues, UseFormRegister, ValidationRule } from "react-hook-form";
 
 export interface SelectProps {
   name: string;
+  value?: string;
   options: string[];
   register: UseFormRegister<FieldValues>;
   validationSchema?: {

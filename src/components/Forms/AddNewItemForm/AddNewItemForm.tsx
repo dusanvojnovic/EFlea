@@ -1,7 +1,15 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import { useForm, FieldValues } from "react-hook-form";
+import { trpc } from "../../../utils/trpc";
+import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { Input } from "../Input/Input";
 import { Select } from "../Select/Select";
+import { storage } from "../../../utils/firebase";
+import { ItemType } from "../../../schema/item.schema";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { v4 } from "uuid";
+import { useMultistepForm } from "../../../hooks/useMultistepForm";
 
 const options = [
   "antiques",
@@ -22,59 +30,71 @@ const options = [
 ];
 
 export const AddNewItemForm: React.FunctionComponent = () => {
-  const [images, setImages] = useState<any>();
+  const { steps, currentStepIndex, isFirstStep, isLastStep, next, back, goTo } =
+    useMultistepForm([]);
+  const [images, setImages] = useState<any>([]);
+  const [urls, setUrls] = useState<string[]>([]);
+  const [progress, setProgress] = useState<number>();
+  const { data: session } = useSession();
+  console.log(session);
 
   const {
     register,
     handleSubmit,
-    setValue,
+    // reset,
     getValues,
-    reset,
     formState: { errors },
   } = useForm<FieldValues>({ reValidateMode: "onSubmit" });
 
-  const onSubmit = (data: any) => {
-    const formData = new FormData();
-    // const images = getValues("root.images");
+  // const { mutateAsync: uploadImage } = trpc.item.addItem.useMutation();
 
-    formData.append("images", data.images[0]);
-    // formData.append("images", images);
-    console.log("data", data);
-    reset();
+  const onSubmit = () => {
+    const promises: any[] = [];
+    images.map((image: any) => {
+      const imageRef = ref(storage, `images/${v4()}`);
+      const uploadTask = uploadBytesResumable(imageRef, image);
+      promises.push(uploadTask);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setProgress(progress);
+        },
+        (error) => {
+          console.error(error);
+        },
+        async () => {
+          await getDownloadURL(uploadTask.snapshot.ref).then((urls) => {
+            setUrls((prevState) => [...prevState, urls]);
+          });
+        }
+      );
+    });
+    Promise.all(promises)
+      .then(() => console.log("all images uploaded"))
+      .catch((err) => console.error(err));
   };
 
-  // const getFiles = () => {
-  //   const files = (
-  //     (document.getElementById("itemImages") as HTMLInputElement) || null
-  //   ).files;
-  //   const imagesArray = [];
-  //   let image = {};
-
-  //   if (!files) return;
-  //   for (let i = 0; i < files.length; i++) {
-  //     image = {
-  //       name: files[i]?.name,
-  //       size: files[i]?.size,
-  //     };
-
-  //     imagesArray.push(image);
-  //   }
-  //   console.log(JSON.stringify(imagesArray));
-  // };
-
-  // const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  // if (e.target.files) {
-  //   const imageArray = Array.from(e.target.files).map((file) =>
-  //     URL.createObjectURL(file)
-  //   );
-  //   setImages((prevImages: any) => [...prevImages, imageArray]);
-  // }
-  // };
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files) return;
+    for (let i = 0; i < e.target.files.length; i++) {
+      const newImage = e.target.files[i];
+      setImages((prevState: any) => [...prevState, newImage]);
+    }
+  }
 
   return (
-    <div className="bg-gray-200 mx-auto	my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-12 ">
-      <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+    <div className="bg-gray-200 relative	mx-auto my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-12 ">
+      <form
+        onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)}
+        encType="multipart/form-data"
+      >
+        <div className="absolute top-2 right-2 text-2xl">
+          {currentStepIndex + 1} / {steps.length}
+        </div>
+
         <Input
           name="title"
           placeholder="Title"
@@ -126,15 +146,18 @@ export const AddNewItemForm: React.FunctionComponent = () => {
           required
           multiple
         /> */}
-        {/* <Input
+        <Input
           element="file"
           name="images"
           register={register}
           errors={errors}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setValue("images", e.target.files)
-          }
-        /> */}
+          // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          //   setImages(e.target.files!)
+          // }
+          // onChange={(event: any) => setImages(event?.target.files)}
+          onChange={handleChange}
+          // onChange={handleFileSelected}
+        />
 
         <button
           className="mx-auto my-8 flex w-[80%] cursor-pointer justify-center self-center rounded-md border-none bg-red p-4 text-[1.5rem] text-white hover:bg-red disabled:cursor-not-allowed"
