@@ -1,7 +1,7 @@
 import z from "zod";
-import ImageUncheckedCreateNestedManyWithoutItemInput from "@prisma/client";
+import { imageSchema } from "./image.schema";
 
-export const addItemSchema = z.object({
+export const itemSchema = z.object({
   title: z.string(),
   category: z.string(),
   description: z.string(),
@@ -9,12 +9,7 @@ export const addItemSchema = z.object({
   acceptExchange: z.boolean(),
   fixedPrice: z.boolean(),
   imgFiles: z.any().nullish(),
-  imagesUrl: z.array(z.string()).or(z.string()),
+  imagesUrl: z.array(imageSchema),
 });
 
-export type ItemType = z.TypeOf<typeof addItemSchema>;
-
-export type ImageType = {
-  url: string;
-  id: string;
-};
+export type ItemType = z.TypeOf<typeof itemSchema>;
