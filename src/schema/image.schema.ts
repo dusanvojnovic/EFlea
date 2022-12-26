@@ -1,8 +1,9 @@
 import z from "zod";
 
-export const uploadImageSchema = z.object({
+export const imageSchema = z.object({
   id: z.string(),
   url: z.string(),
+  itemId: z.string().optional(),
 });
 
-export type ImageType = z.TypeOf<typeof uploadImageSchema>;
+export type ImageType = z.TypeOf<typeof imageSchema>;
