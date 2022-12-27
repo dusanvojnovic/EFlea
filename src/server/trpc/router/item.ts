@@ -1,11 +1,9 @@
-import { addItemSchema, ImageType } from "../../../schema/item.schema";
+import { itemSchema } from "../../../schema/item.schema";
 import { router, publicProcedure } from "../trpc";
-import * as trpc from "@trpc/server";
-import z, { any } from "zod";
 
 export const itemRouter = router({
   addItem: publicProcedure
-    .input(addItemSchema)
+    .input(itemSchema)
     .mutation(async ({ ctx, input }) => {
       const {
         description,
@@ -27,10 +25,15 @@ export const itemRouter = router({
             category,
             acceptExchange,
             fixedPrice,
-            images: imagesUrl as string,
+            images: {
+              create: imagesUrl.map((url) => ({
+                url,
+              })),
+            },
             userId: ctx.session.user.id,
           },
         });
+        return newItem;
       } catch (error) {
         console.error(error);
       }

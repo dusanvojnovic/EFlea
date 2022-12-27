@@ -1,27 +1,30 @@
-import { uploadBytesResumable, ref, getDownloadURL } from "firebase/storage";
+import {
+  uploadBytesResumable,
+  ref,
+  getDownloadURL,
+  UploadTask,
+} from "firebase/storage";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
 import { v4 } from "uuid";
-import { ImageType, ItemType } from "../../../schema/item.schema";
+import { ItemType } from "../../../schema/item.schema";
 import { storage } from "../../../utils/firebase";
 import { ImageConfig } from "../../../utils/imageConfig";
-import { trpc } from "../../../utils/trpc";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
 import { UpdateFields } from "./NewForm";
+
+interface BlobWithProgress extends Blob {
+  progress: number;
+}
 
 export const DropFile: React.FunctionComponent<
   Partial<ItemType> & UpdateFields
 > = ({ updateFields, imgFiles }) => {
-  const [images, setImages] = useState<any>([]);
-  const [i, setI] = useState<any>([]);
-  const [imageFiles, setImageFiles] = useState<any>(imgFiles);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadingDone, setUploadingDone] = useState<boolean>(false);
   const [, setProgress] = useState<number>();
   const [dragEnter, setDragEnter] = useState<boolean>(false);
   const wrapperRef = useRef(null);
-
-  // const { mutateAsync: addItem } = trpc.item.addItem.useMutation();
 
   const onDragEnter = () => {
     setDragEnter(true);
@@ -35,11 +38,11 @@ export const DropFile: React.FunctionComponent<
     setDragEnter(false);
   };
 
-  const uploadImages = (files: any) => {
-    const promises: any[] = [];
-    // const imageUrls: string[] = [];
+  const uploadImages = (files: BlobWithProgress[]): void => {
+    const promises: UploadTask[] = [];
     const imageUrls: string[] = [];
-    files.map((image: any) => {
+
+    files.map((image: BlobWithProgress) => {
       const imageRef = ref(storage, `images/${v4()}`);
       const uploadTask = uploadBytesResumable(imageRef, image);
       promises.push(uploadTask);
@@ -73,27 +76,18 @@ export const DropFile: React.FunctionComponent<
       .catch((err) => console.error(err));
   };
 
-  const upd = () => {
-    console.log("im called");
-    // updateFields({ imgFiles: images });
-    // setImages(images);
-    setImageFiles(images);
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
-    const imgF: any[] = [];
     for (let i = 0; i < e.target.files.length; i++) {
       const newImage = e.target.files[i];
-      imgF.push(newImage);
+      imgFiles.push(newImage);
     }
-    updateFields({ imgFiles: imgF });
+    updateFields({ imgFiles: imgFiles });
   };
 
-  const removeImage = (image: any) => {
+  const removeImage = (image: File) => {
     const updatedList = [...imgFiles];
-    updatedList.splice(images.indexOf(image), 1);
-    // setImages(updatedList);
+    updatedList.splice(imgFiles.indexOf(image), 1);
     updateFields({ imgFiles: updatedList });
   };
 
