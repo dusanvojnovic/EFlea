@@ -3,7 +3,7 @@ import React from "react";
 import { Select } from "../Select/Select";
 import { useForm, FieldValues } from "react-hook-form";
 import { ItemType } from "../../../schema/item.schema";
-import { UpdateFields } from "./NewForm";
+import { UpdateFields } from "./AddNewItemForm";
 
 const options = [
   "antiques",
