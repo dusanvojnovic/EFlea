@@ -13,11 +13,13 @@ import { ImageConfig } from "../../../utils/imageConfig";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
 import { UpdateFields } from "./NewForm";
 
+interface BlobWithProgress extends Blob {
+  progress: number;
+}
+
 export const DropFile: React.FunctionComponent<
   Partial<ItemType> & UpdateFields
 > = ({ updateFields, imgFiles }) => {
-  const [images, setImages] = useState<any>([]);
-  const [imageFiles, setImageFiles] = useState<any>(imgFiles);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadingDone, setUploadingDone] = useState<boolean>(false);
   const [, setProgress] = useState<number>();
@@ -36,11 +38,11 @@ export const DropFile: React.FunctionComponent<
     setDragEnter(false);
   };
 
-  const uploadImages = (files: Blob[]): void => {
+  const uploadImages = (files: BlobWithProgress[]): void => {
     const promises: UploadTask[] = [];
     const imageUrls: string[] = [];
 
-    files.map((image: any) => {
+    files.map((image: BlobWithProgress) => {
       const imageRef = ref(storage, `images/${v4()}`);
       const uploadTask = uploadBytesResumable(imageRef, image);
       promises.push(uploadTask);
@@ -76,7 +78,6 @@ export const DropFile: React.FunctionComponent<
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
-    const imgFiles: any[] = [];
     for (let i = 0; i < e.target.files.length; i++) {
       const newImage = e.target.files[i];
       imgFiles.push(newImage);
@@ -86,7 +87,7 @@ export const DropFile: React.FunctionComponent<
 
   const removeImage = (image: File) => {
     const updatedList = [...imgFiles];
-    updatedList.splice(images.indexOf(image), 1);
+    updatedList.splice(imgFiles.indexOf(image), 1);
     updateFields({ imgFiles: updatedList });
   };
 
