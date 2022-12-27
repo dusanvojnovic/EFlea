@@ -83,10 +83,9 @@ model Item {
   price          String
   acceptExchange Boolean
   fixedPrice     Boolean
-  images         String
   user           User    @relation(fields: [userId], references: [id])
   userId         String
-  Image          Image[]
+  images         Image[]
 
   @@index([userId])
 }
@@ -94,7 +93,7 @@ model Item {
 model Image {
   id     String  @id @default(cuid())
   url    String
-  Item   Item?   @relation(fields: [itemId], references: [id])
+  item   Item?   @relation(fields: [itemId], references: [id])
   itemId String?
 
   @@index([itemId])
