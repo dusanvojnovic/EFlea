@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-key */
-import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
@@ -16,7 +15,7 @@ const INITIAL_DATA: ItemType = {
   price: "",
   description: "",
   imgFiles: [],
-  imagesUrl: "",
+  imagesUrl: [],
   acceptExchange: false,
   fixedPrice: false,
 };
@@ -27,7 +26,6 @@ export type UpdateFields = {
 
 export const NewForm: React.FunctionComponent = () => {
   const [data, setData] = useState(INITIAL_DATA);
-  const { data: session } = useSession();
   const [formIsValid, setFormIsValid] = useState<boolean>(false);
 
   const updateFields = (fields: Partial<ItemType>) => {
@@ -50,7 +48,6 @@ export const NewForm: React.FunctionComponent = () => {
     <DropFile {...data} updateFields={updateFields} />,
   ]);
 
-  // console.log(session);
   console.log("DATA", data);
 
   const { handleSubmit } = useForm<FieldValues>();
@@ -64,7 +61,7 @@ export const NewForm: React.FunctionComponent = () => {
       setFormIsValid(false);
     }
     if (formIsValid) {
-      addItem({ ...data, imagesUrl: data.imagesUrl.toString() });
+      addItem({ ...data });
     } else {
       console.log("invalid form");
     }
