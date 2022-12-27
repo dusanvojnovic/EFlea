@@ -1,5 +1,4 @@
 import z from "zod";
-import { imageSchema } from "./image.schema";
 
 export const itemSchema = z.object({
   title: z.string(),
@@ -9,7 +8,7 @@ export const itemSchema = z.object({
   acceptExchange: z.boolean(),
   fixedPrice: z.boolean(),
   imgFiles: z.any().nullish(),
-  imagesUrl: z.array(imageSchema),
+  imagesUrl: z.array(z.string()),
 });
 
 export type ItemType = z.TypeOf<typeof itemSchema>;
