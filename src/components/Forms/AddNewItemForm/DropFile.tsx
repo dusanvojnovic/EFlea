@@ -11,7 +11,7 @@ import { ItemType } from "../../../schema/item.schema";
 import { storage } from "../../../utils/firebase";
 import { ImageConfig } from "../../../utils/imageConfig";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
-import { UpdateFields } from "./NewForm";
+import { UpdateFields } from "./AddNewItemForm";
 
 interface BlobWithProgress extends Blob {
   progress: number;
