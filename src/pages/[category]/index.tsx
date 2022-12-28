@@ -3,11 +3,7 @@ import React from "react";
 import { ItemsList } from "../../components/Items/ItemsList";
 import { Sidebar } from "../../components/Sidebar/Sidebar";
 
-interface CategoryPageProps {
-  category: string;
-}
-
-const CategoryPage: React.FunctionComponent<CategoryPageProps> = ({}) => {
+const CategoryPage: React.FunctionComponent = () => {
   const router = useRouter();
   const { category } = router.query;
 
