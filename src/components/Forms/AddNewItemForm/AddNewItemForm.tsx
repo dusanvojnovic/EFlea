@@ -6,7 +6,7 @@ import { ItemType } from "../../../schema/item.schema";
 import { useMultistepForm } from "../../../hooks/useMultistepForm";
 import { ItemInfoForm } from "./ItemInfoForm";
 import { PricingInfoForm } from "./PricingInfoForm";
-import { DropFile } from "./DropFile";
+import { DragAndDrop } from "./DragAndDrop";
 import { validateFormData } from "../../../utils/multistepFormValidator";
 
 const INITIAL_DATA: ItemType = {
@@ -45,7 +45,7 @@ export const AddNewItemForm: React.FunctionComponent = () => {
   } = useMultistepForm([
     <ItemInfoForm {...data} updateFields={updateFields} />,
     <PricingInfoForm {...data} updateFields={updateFields} />,
-    <DropFile {...data} updateFields={updateFields} />,
+    <DragAndDrop {...data} updateFields={updateFields} />,
   ]);
 
   const { handleSubmit } = useForm<FieldValues>();
