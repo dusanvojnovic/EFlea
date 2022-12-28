@@ -17,7 +17,7 @@ interface BlobWithProgress extends Blob {
   progress: number;
 }
 
-export const DropFile: React.FunctionComponent<
+export const DragAndDrop: React.FunctionComponent<
   Partial<ItemType> & UpdateFields
 > = ({ updateFields, imgFiles }) => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -38,7 +38,7 @@ export const DropFile: React.FunctionComponent<
     setDragEnter(false);
   };
 
-  const uploadImages = (files: BlobWithProgress[]): void => {
+  const uploadImages = (files: BlobWithProgress[]) => {
     const promises: UploadTask[] = [];
     const imageUrls: string[] = [];
 
@@ -174,7 +174,6 @@ export const DropFile: React.FunctionComponent<
           upload
         </button>
       )}
-      {uploadingDone && <button>submit</button>}
     </>
   );
 };
