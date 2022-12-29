@@ -2,17 +2,19 @@ import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 
 export const imageRouter = router({
-  addImage: publicProcedure
-    .input(z.object({ url: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const { url } = input;
+  getPreviewPicture: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { id } = input;
       try {
-        const newImage = await ctx.prisma.image.create({
-          data: {
-            url,
+        const previewPicture = await ctx.prisma.image.findFirst({
+          where: {
+            itemId: id,
           },
         });
-        return newImage;
+        if (previewPicture) {
+          return previewPicture.url;
+        }
       } catch (error) {
         console.error(error);
       }
