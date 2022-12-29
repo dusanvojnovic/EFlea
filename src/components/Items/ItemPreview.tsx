@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { trpc } from "../../utils/trpc";
 
 interface ItemPreviewProps {
-  id: number;
+  id: string;
   title: string;
-  price: number;
+  price: string;
   description: string;
   category: string;
-  pictureUrl: string;
 }
 
 export const ItemPreview: React.FunctionComponent<ItemPreviewProps> = ({
@@ -17,8 +17,11 @@ export const ItemPreview: React.FunctionComponent<ItemPreviewProps> = ({
   category,
   price,
   description,
-  pictureUrl,
 }) => {
+  const { data: previewPicture } = trpc.image.getPreviewPicture.useQuery({
+    id,
+  });
+
   return (
     <div className="flex flex-col rounded-md border border-red">
       <Link href={`/category/${category}/${id}`}>
@@ -31,12 +34,10 @@ export const ItemPreview: React.FunctionComponent<ItemPreviewProps> = ({
         <h3 className="mt-0 w-[60%] text-2xl ">{description}</h3>
         <Image
           className="rounded-md"
-          src={pictureUrl}
-          alt=""
+          src={previewPicture as string}
+          alt={title}
           width={130}
           height={100}
-          // layout="responsive"
-          // objectFit="fill"
         />
       </div>
     </div>
