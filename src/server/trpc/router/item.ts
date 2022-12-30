@@ -18,21 +18,18 @@ export const itemRouter = router({
         throw new Error("Something went wrong");
       }
     }),
-  getItemsByUser: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const { id } = input;
-      try {
-        const items = await ctx.prisma.item.findMany({
-          where: {
-            userId: id,
-          },
-        });
-        return items;
-      } catch (error) {
-        throw new Error("Something went wrong");
-      }
-    }),
+  getItemsByUser: publicProcedure.query(async ({ ctx }) => {
+    try {
+      const items = await ctx.prisma.item.findMany({
+        where: {
+          userId: ctx.session?.user?.id,
+        },
+      });
+      return items;
+    } catch (error) {
+      throw new Error("Something went wrong");
+    }
+  }),
   addItem: publicProcedure
     .input(itemSchema)
     .mutation(async ({ ctx, input }) => {
