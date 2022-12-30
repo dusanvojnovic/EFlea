@@ -54,7 +54,7 @@ export const AddNewItemForm: React.FunctionComponent = () => {
 
   const onSubmit = () => {
     if (validateFormData(data)) {
-      addItem({ ...data });
+      addItem(data);
     } else {
       setFormIsValid(false);
     }
