@@ -32,13 +32,15 @@ export const ItemPreview: React.FunctionComponent<ItemPreviewProps> = ({
       </Link>
       <div className="flex justify-between p-4">
         <h3 className="mt-0 w-[60%] text-2xl ">{description}</h3>
-        <Image
-          className="rounded-md"
-          src={previewPicture as string}
-          alt={title}
-          width={130}
-          height={100}
-        />
+        {previewPicture && (
+          <Image
+            className="rounded-md"
+            src={previewPicture}
+            alt={title}
+            width={130}
+            height={100}
+          />
+        )}
       </div>
     </div>
   );
