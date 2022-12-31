@@ -55,7 +55,7 @@ export const Header: React.FunctionComponent = () => {
           >
             <ul className="m-0 list-none text-[1.5rem]">
               <li className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]">
-                My Items
+                <Link href={`/user/${session?.user?.id}`}>My Items</Link>
               </li>
               <li className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]">
                 Edit Account

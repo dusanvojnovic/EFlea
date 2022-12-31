@@ -16,7 +16,7 @@ export const RegisterForm: React.FunctionComponent = () => {
     reValidateMode: "onSubmit",
     defaultValues: {
       password: "",
-      passwordConfirmed: "",
+      confirmPassword: "",
     },
   });
 
@@ -25,7 +25,7 @@ export const RegisterForm: React.FunctionComponent = () => {
   const { mutateAsync } = trpc.user.registerUser.useMutation();
 
   const onSubmit = async (data: CreateUserInput) => {
-    await mutateAsync({ ...data });
+    await mutateAsync(data);
     router.push("/");
   };
 
@@ -101,9 +101,9 @@ export const RegisterForm: React.FunctionComponent = () => {
           errors={errors}
         />
         <Input
-          name="passwordConfirmed"
+          name="confirmPassword"
           isPasswordField
-          isDirty={dirtyFields.passwordConfirmed}
+          isDirty={dirtyFields.confirmPassword}
           placeholder="Confirm Password"
           register={register}
           validationSchema={{

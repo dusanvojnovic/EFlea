@@ -16,7 +16,7 @@ function defineNextConfig(config) {
 export default defineNextConfig({
   reactStrictMode: true,
   images: {
-    domains: ["www.b92.net", "thegadgetflow.com"],
+    domains: ["firebasestorage.googleapis.com"],
   },
   swcMinify: true,
   /** Next.js i18n docs:
