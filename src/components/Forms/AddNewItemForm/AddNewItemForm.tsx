@@ -8,6 +8,8 @@ import { ItemInfoForm } from "./ItemInfoForm";
 import { PricingInfoForm } from "./PricingInfoForm";
 import { DragAndDrop } from "./DragAndDrop";
 import { validateFormData } from "../../../utils/multistepFormValidator";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 const INITIAL_DATA: ItemType = {
   title: "",
@@ -27,6 +29,7 @@ export type UpdateFields = {
 export const AddNewItemForm: React.FunctionComponent = () => {
   const [data, setData] = useState(INITIAL_DATA);
   const [formIsValid, setFormIsValid] = useState<boolean>(true);
+  const router = useRouter();
 
   const updateFields = (fields: Partial<ItemType>) => {
     setData((previousState) => {
@@ -50,11 +53,16 @@ export const AddNewItemForm: React.FunctionComponent = () => {
 
   const { handleSubmit } = useForm<FieldValues>();
 
+  const { data: session } = useSession();
   const { mutateAsync: addItem } = trpc.item.addItem.useMutation();
 
   const onSubmit = () => {
     if (validateFormData(data)) {
-      addItem(data);
+      addItem(data, {
+        onSuccess: () => {
+          router.push(`/user/${session?.user?.id}`);
+        },
+      });
     } else {
       setFormIsValid(false);
     }
