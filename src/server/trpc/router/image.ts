@@ -19,4 +19,19 @@ export const imageRouter = router({
         console.error(error);
       }
     }),
+  getAllPictures: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        const images = await ctx.prisma.image.findMany({
+          where: {
+            itemId: id,
+          },
+        });
+        return images;
+      } catch (error) {
+        console.error(error);
+      }
+    }),
 });

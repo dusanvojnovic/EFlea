@@ -3,6 +3,7 @@ import { router, publicProcedure } from "../trpc";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import * as trpc from "@trpc/server";
 import bcrypt from "bcrypt";
+import { z } from "zod";
 
 export const userRouter = router({
   registerUser: publicProcedure
@@ -42,6 +43,21 @@ export const userRouter = router({
             message: "Something went wrong",
           });
         }
+      }
+    }),
+  getUserById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        const user = await ctx.prisma.user.findUnique({
+          where: {
+            id,
+          },
+        });
+        return user;
+      } catch (error) {
+        console.error(error);
       }
     }),
 });

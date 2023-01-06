@@ -1,7 +1,8 @@
+import { Image } from "@prisma/client";
 import React from "react";
 
 interface ImageSliderIndicatorsProps {
-  images: string[];
+  images: Image[];
   currentIndex: number;
   switchSlide: (index: number) => void;
 }

@@ -1,64 +1,51 @@
 import React, { useState } from "react";
 import { IoThumbsUpOutline, IoThumbsDownOutline } from "react-icons/io5";
 import { IconContext } from "react-icons";
-import { Modal } from "../Modal/Modal";
 import { ImageSlider } from "../ImageSlider/ImageSlider";
-
-const PICTURE_URL =
-  "https://thegadgetflow.com/wp-content/uploads/2020/01/Dell-2020-XPS-13-Lightweight-Laptop-01-1.jpg";
-
-const anotherPic =
-  "https://www.b92.net/news/pics/2022/10/06/157766439633f2e68a6028952089286_w640.jpg";
-
-const pictures = [
-  PICTURE_URL,
-  anotherPic,
-  PICTURE_URL,
-  anotherPic,
-  PICTURE_URL,
-];
+import { useRouter } from "next/router";
+import { trpc } from "../../utils/trpc";
+import { Modal } from "../Modal/Modal";
+import { Image } from "@prisma/client";
 
 export const Item: React.FunctionComponent = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const router = useRouter();
+  const { id } = router.query;
+  const { data: item } = trpc.item.getItemById.useQuery({ id: id as string });
+  const { data: user } = trpc.user.getUserById.useQuery({
+    id: item?.userId as string,
+  });
+  const { data: imagePreview } = trpc.image.getPreviewPicture.useQuery({
+    id: item?.id as string,
+  });
+  const { data: images } = trpc.image.getAllPictures.useQuery({
+    id: item?.id as string,
+  });
 
   return (
     <>
       {isOpen ? (
         <Modal onClick={() => setIsOpen(false)}>
-          <ImageSlider images={pictures} />
+          <ImageSlider images={images as Image[]} />
         </Modal>
       ) : (
         <div className="my-48 mx-auto flex w-[90vw] flex-col sm:w-[65rem]">
           <div className="flex flex-col rounded-sm border border-green p-8 s:flex-row s:justify-around">
             <div className="mb-12 w-full s:mb-0 s:w-[50%] ">
-              <h1 className="m-0 mb-12 self-start text-4xl">
-                A Very Good Laptop
-              </h1>
-              <h3 className="text-2xl">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel
-                non, quam unde quis consequatur numquam consequuntur aspernatur
-                doloremque labore ad minus? Necessitatibus laboriosam dolorum
-                odit, voluptatem placeat blanditiis eum ut. Lorem ipsum dolor
-                sit, amet consectetur adipisicing elit. Vel non, quam unde quis
-                consequatur numquam consequuntur aspernatur doloremque labore ad
-                minus? Necessitatibus laboriosam dolorum odit, voluptatem
-                placeat blanditiis eum ut. Lorem ipsum dolor sit, amet
-                consectetur adipisicing elit. Vel non, quam unde quis
-                consequatur numquam consequuntur aspernatur doloremque labore ad
-                minus? Necessitatibus laboriosam dolorum
-              </h3>
+              <h1 className="m-0 mb-12 self-start text-4xl">{item?.title}</h1>
+              <h3 className="text-2xl">{item?.description}</h3>
             </div>
             <div className="flex flex-col justify-between">
               <div className="flex flex-col">
                 <div className="flex flex-row justify-between s:flex-col">
                   <img
-                    src={PICTURE_URL}
+                    src={imagePreview}
                     alt=""
                     className="mb-4 h-40 w-[50%] rounded-sm s:w-[100%]"
                   />
                   <div className="flex flex-col justify-between">
-                    <h2 className="text-[1.7rem]">UserName</h2>
-                    <h3 className="mb-0 text-[1.35rem] s:mb-6">user city</h3>
+                    <h2 className="text-[1.7rem]">{user?.firstName}</h2>
+                    <h3 className="mb-0 text-[1.35rem] s:mb-6">{user?.city}</h3>
                     <div className="flex  w-[35%] justify-between">
                       <div className="flex flex-col items-center self-center text-2xl">
                         <IconContext.Provider value={{ color: "#105652" }}>

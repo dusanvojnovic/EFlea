@@ -1,18 +1,15 @@
 import { Item } from "@prisma/client";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import React from "react";
 import { ItemsList } from "../../../components/Items/ItemsList";
 import { Sidebar } from "../../../components/Sidebar/Sidebar";
 import { trpc } from "../../../utils/trpc";
 
-interface CategoryPageProps {
-  category: string;
-}
-
-const CategoryPage: React.FunctionComponent<CategoryPageProps> = ({
+const CategoryPage: React.FunctionComponent = ({
   category,
-}) => {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { data: categoryItems } = trpc.item.getItemsByCategory.useQuery({
-    category: category,
+    category: category as string,
   });
 
   return (
@@ -25,6 +22,22 @@ const CategoryPage: React.FunctionComponent<CategoryPageProps> = ({
       </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const category = context.params?.category;
+
+  if (!category) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {
+      category,
+    },
+  };
 };
 
 export default CategoryPage;
