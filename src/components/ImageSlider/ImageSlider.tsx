@@ -1,10 +1,11 @@
+import { Image } from "@prisma/client";
 import { useState } from "react";
 import { ImageSliderControls } from "./ImageSliderControls";
 import { ImageSliderIndicators } from "./ImageSliderIndicators";
 import { SliderItem } from "./SliderItem";
 
 interface ImageSliderProps {
-  images: string[];
+  images: Image[];
 }
 
 export const ImageSlider: React.FunctionComponent<ImageSliderProps> = ({

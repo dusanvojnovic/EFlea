@@ -1,8 +1,9 @@
+import { Image as ImageType } from "@prisma/client";
 import Image from "next/future/image";
 import React from "react";
 
 interface SliderItemProps {
-  image: string;
+  image: ImageType;
 }
 
 export const SliderItem: React.FunctionComponent<SliderItemProps> = ({
@@ -10,7 +11,7 @@ export const SliderItem: React.FunctionComponent<SliderItemProps> = ({
 }) => {
   return (
     <Image
-      src={image}
+      src={image.url}
       alt="image"
       width={1000}
       height={1000}
