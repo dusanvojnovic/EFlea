@@ -1,6 +1,7 @@
 import React from "react";
 import { ItemPreview } from "./ItemPreview";
 import { Item } from "@prisma/client";
+import Link from "next/link";
 
 interface ItemsListProps {
   items: Item[];
@@ -21,14 +22,15 @@ export const ItemsList: React.FunctionComponent<ItemsListProps> = ({
           {items
             ? items.map((item) => {
                 return (
-                  <ItemPreview
-                    id={item.id as string}
-                    category={item.category}
-                    title={item.title}
-                    description={item.description}
-                    price={item.price}
-                    key={item.description}
-                  />
+                  <Link key={item.id} href={`/category/${category}/${item.id}`}>
+                    <ItemPreview
+                      id={item.id as string}
+                      category={item.category}
+                      title={item.title}
+                      description={item.description}
+                      price={item.price}
+                    />
+                  </Link>
                 );
               })
             : null}
