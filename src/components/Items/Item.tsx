@@ -6,10 +6,12 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { Modal } from "../Modal/Modal";
 import { Image } from "@prisma/client";
+import Link from "next/link";
 
 export const Item: React.FunctionComponent = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const router = useRouter();
+  const { asPath } = router;
   const { id } = router.query;
   const { data: item } = trpc.item.getItemById.useQuery({ id: id as string });
   const { data: user } = trpc.user.getUserById.useQuery({
@@ -65,12 +67,20 @@ export const Item: React.FunctionComponent = () => {
               </div>
               <div className="flex w-[50%] flex-col justify-between gap-2 xs:flex-row s:w-full s:flex-col">
                 <h2 className="text-2xl">all users items</h2>
-                <button
-                  onClick={() => setIsOpen(true)}
-                  className="self-start rounded-md bg-green py-2 px-4 text-light s:text-2xl"
-                >
-                  contact user
-                </button>
+                {user?.id === item?.userId ? (
+                  <Link href={`${asPath}/edit`}>
+                    <button className="self-start rounded-md bg-green py-2 px-4 text-light s:text-2xl">
+                      edit item
+                    </button>
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => setIsOpen(true)}
+                    className="self-start rounded-md bg-green py-2 px-4 text-light s:text-2xl"
+                  >
+                    contact user
+                  </button>
+                )}
               </div>
             </div>
           </div>
