@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { itemSchema } from "../../../schema/item.schema";
-import { router, publicProcedure } from "../trpc";
+import { publicProcedure, router } from "../trpc";
 
 export const itemRouter = router({
   getItemsByCategory: publicProcedure
@@ -62,6 +62,44 @@ export const itemRouter = router({
           },
         });
         return newItem;
+      } catch (error) {
+        console.error(error);
+      }
+    }),
+  editItem: publicProcedure
+    .input(itemSchema.merge(z.object({ itemId: z.string() })))
+    .mutation(async ({ ctx, input }) => {
+      const {
+        description,
+        title,
+        category,
+        price,
+        acceptExchange,
+        fixedPrice,
+        imagesUrl,
+        itemId,
+      } = input;
+
+      try {
+        const updatedItem = await ctx.prisma.item.update({
+          data: {
+            description,
+            price,
+            title,
+            category,
+            acceptExchange,
+            fixedPrice,
+            images: {
+              create: imagesUrl.map((url) => ({
+                url,
+              })),
+            },
+          },
+          where: {
+            id: itemId,
+          },
+        });
+        return updatedItem;
       } catch (error) {
         console.error(error);
       }
