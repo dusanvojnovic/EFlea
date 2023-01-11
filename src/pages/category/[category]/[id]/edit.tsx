@@ -4,7 +4,7 @@ import {
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
-import { AddNewItemForm } from "../../../../components/Forms/AddNewItemForm/AddOrEditItem";
+import { AddOrEditItemForm } from "../../../../components/Forms/AddNewItemForm/AddOrEditItem";
 import { trpc } from "../../../../utils/trpc";
 
 const Edit: NextPage = ({
@@ -21,7 +21,7 @@ const Edit: NextPage = ({
 
   return (
     <div>
-      <AddNewItemForm
+      <AddOrEditItemForm
         itemData={{ ...itemData!, imagesUrl }}
         formAction="edit"
         itemId={id}

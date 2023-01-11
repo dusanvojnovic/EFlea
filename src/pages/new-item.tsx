@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { AddNewItemForm } from "../components/Forms/AddNewItemForm/AddOrEditItem";
+import { AddOrEditItemForm } from "../components/Forms/AddNewItemForm/AddOrEditItem";
 
 const INITIAL_DATA = {
   title: "",
@@ -15,7 +15,7 @@ const INITIAL_DATA = {
 const NewItemPage: NextPage = () => {
   return (
     <div>
-      <AddNewItemForm itemData={INITIAL_DATA} formAction="add" />
+      <AddOrEditItemForm itemData={INITIAL_DATA} formAction="add" />
     </div>
   );
 };

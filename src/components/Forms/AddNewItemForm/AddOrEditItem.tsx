@@ -21,7 +21,7 @@ export type UpdateFields = {
   updateFields: (fields: Partial<ItemType>) => void;
 };
 
-export const AddNewItemForm: React.FunctionComponent<AddOrEditItemProps> = ({
+export const AddOrEditItemForm: React.FunctionComponent<AddOrEditItemProps> = ({
   itemData,
   formAction,
   itemId,
