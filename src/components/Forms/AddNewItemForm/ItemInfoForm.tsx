@@ -1,9 +1,9 @@
-import { Input } from "../Input/Input";
 import React from "react";
-import { Select } from "../Select/Select";
-import { useForm, FieldValues } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { ItemType } from "../../../schema/item.schema";
-import { UpdateFields } from "./AddNewItemForm";
+import { Input } from "../Input/Input";
+import { Select } from "../Select/Select";
+import { UpdateFields } from "./AddOrEditItem";
 
 const options = [
   "antiques",
@@ -25,11 +25,13 @@ const options = [
 
 export const ItemInfoForm: React.FunctionComponent<
   Partial<ItemType> & UpdateFields
-> = ({ title, description, updateFields }) => {
+> = ({ title, description, category, updateFields }) => {
   const {
     register,
     formState: { errors },
   } = useForm<FieldValues>();
+
+  const categoryIndex = options.indexOf(category as string);
 
   return (
     <>
@@ -52,6 +54,8 @@ export const ItemInfoForm: React.FunctionComponent<
       <Select
         register={register}
         name="category"
+        // value={category as string}
+        categoryIndex={categoryIndex}
         options={options}
         validationSchema={{ required: "You must select category" }}
         onChange={(e) => updateFields({ category: e.target.value })}

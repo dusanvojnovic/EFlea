@@ -1,7 +1,7 @@
 import {
-  uploadBytesResumable,
-  ref,
   getDownloadURL,
+  ref,
+  uploadBytesResumable,
   UploadTask,
 } from "firebase/storage";
 import Image from "next/image";
@@ -11,7 +11,7 @@ import { ItemType } from "../../../schema/item.schema";
 import { storage } from "../../../utils/firebase";
 import { ImageConfig } from "../../../utils/imageConfig";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
-import { UpdateFields } from "./AddNewItemForm";
+import { UpdateFields } from "./AddOrEditItem";
 
 interface BlobWithProgress extends Blob {
   progress: number;
