@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ItemType } from "../../../schema/item.schema";
 import { Input } from "../Input/Input";
-import { UpdateFields } from "./AddNewItemForm";
+import { UpdateFields } from "./AddOrEditItem";
 
 export const PricingInfoForm: React.FunctionComponent<
   Partial<ItemType> & UpdateFields

@@ -1,33 +1,32 @@
 /* eslint-disable react/jsx-key */
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { trpc } from "../../../utils/trpc";
-import { useForm, FieldValues } from "react-hook-form";
-import { ItemType } from "../../../schema/item.schema";
+import { FieldValues, useForm } from "react-hook-form";
 import { useMultistepForm } from "../../../hooks/useMultistepForm";
+import { ItemType } from "../../../schema/item.schema";
+import { validateFormData } from "../../../utils/multistepFormValidator";
+import { trpc } from "../../../utils/trpc";
+import { DragAndDrop } from "./DragAndDrop";
 import { ItemInfoForm } from "./ItemInfoForm";
 import { PricingInfoForm } from "./PricingInfoForm";
-import { DragAndDrop } from "./DragAndDrop";
-import { validateFormData } from "../../../utils/multistepFormValidator";
-import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 
-const INITIAL_DATA: ItemType = {
-  title: "",
-  category: "",
-  price: "",
-  description: "",
-  imgFiles: [],
-  imagesUrl: [],
-  acceptExchange: false,
-  fixedPrice: false,
-};
+interface AddOrEditItemProps {
+  itemData: ItemType;
+  formAction: "add" | "edit";
+  itemId?: string;
+}
 
 export type UpdateFields = {
   updateFields: (fields: Partial<ItemType>) => void;
 };
 
-export const AddNewItemForm: React.FunctionComponent = () => {
-  const [data, setData] = useState(INITIAL_DATA);
+export const AddOrEditItemForm: React.FunctionComponent<AddOrEditItemProps> = ({
+  itemData,
+  formAction,
+  itemId,
+}) => {
+  const [data, setData] = useState(itemData);
   const [formIsValid, setFormIsValid] = useState<boolean>(true);
   const router = useRouter();
 
@@ -55,14 +54,20 @@ export const AddNewItemForm: React.FunctionComponent = () => {
 
   const { data: session } = useSession();
   const { mutateAsync: addItem } = trpc.item.addItem.useMutation();
+  const { mutateAsync: editItem } = trpc.item.editItem.useMutation();
 
   const onSubmit = () => {
     if (validateFormData(data)) {
-      addItem(data, {
-        onSuccess: () => {
-          router.push(`/user/${session?.user?.id}`);
-        },
-      });
+      if (formAction === "add") {
+        addItem(data, {
+          onSuccess: () => {
+            router.push(`/user/${session?.user?.id}`);
+          },
+        });
+      } else if (formAction === "edit") {
+        if (!itemId) return;
+        editItem({ ...data, itemId });
+      }
     } else {
       setFormIsValid(false);
     }
