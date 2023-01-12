@@ -29,24 +29,25 @@ export const EditItemPhotos: React.FunctionComponent<EditItemPhotosProps> = ({
     <>
       <div className="flex flex-wrap gap-4">
         {images.map((image) => {
+          const imageIsSelected = selectedImages.includes(image);
           return (
             <div key={image} className="relative h-[12rem] w-[14rem]">
               <Image
-                className={selectedImages.includes(image) ? "opacity-80" : ""}
+                className={imageIsSelected ? "opacity-80" : ""}
                 src={image}
                 alt="item image"
                 layout="fill"
               />
               <span
                 className={`absolute right-1 top-1 flex
-                  h-8 w-8 cursor-pointer items-center justify-center rounded-[50%]
-                  ${
-                    selectedImages.includes(image)
-                      ? "bg-stone-600"
-                      : "bg-stone-200"
-                  }`}
+                  h-7 w-7 cursor-pointer items-center justify-center rounded-[50%]
+                  ${imageIsSelected ? "bg-stone-600" : "bg-stone-200"}`}
                 onClick={() => toggleSelection(image)}
-              />
+              >
+                {imageIsSelected && (
+                  <p className="select-none text-white">&#x2713;</p>
+                )}
+              </span>
             </div>
           );
         })}
