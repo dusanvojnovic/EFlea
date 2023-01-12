@@ -50,20 +50,4 @@ export const imageRouter = router({
         console.error(error);
       }
     }),
-  removePicturesByItemId: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const { id } = input;
-      try {
-        const pictures = await ctx.prisma.image.deleteMany({
-          where: {
-            itemId: id,
-          },
-        });
-        console.log(pictures);
-        return { message: "all pictures are deleted" };
-      } catch (error) {
-        console.error(error);
-      }
-    }),
 });
