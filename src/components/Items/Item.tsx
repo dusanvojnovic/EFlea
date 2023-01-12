@@ -24,8 +24,6 @@ export const Item: React.FunctionComponent = () => {
     id: item?.id as string,
   });
   const { mutateAsync: deleteItem } = trpc.item.deleteItem.useMutation();
-  const { mutateAsync: deleteImages } =
-    trpc.image.removePicturesByItemId.useMutation();
 
   function removeItem(itemId: string) {
     deleteItem(
@@ -36,7 +34,6 @@ export const Item: React.FunctionComponent = () => {
         },
       }
     );
-    deleteImages({ id: itemId });
   }
 
   return (
