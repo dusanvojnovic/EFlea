@@ -6,7 +6,6 @@ import {
 } from "firebase/storage";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
-import { v4 } from "uuid";
 import { ItemType } from "../../../schema/item.schema";
 import { storage } from "../../../utils/firebase";
 import { ImageConfig } from "../../../utils/imageConfig";
@@ -43,7 +42,7 @@ export const DragAndDrop: React.FunctionComponent<
     const imageUrls: string[] = [];
 
     files.map((image: BlobWithProgress) => {
-      const imageRef = ref(storage, `images/${v4()}`);
+      const imageRef = ref(storage, `images/${crypto.randomUUID()}`);
       const uploadTask = uploadBytesResumable(imageRef, image);
       promises.push(uploadTask);
       setIsUploading(true);
