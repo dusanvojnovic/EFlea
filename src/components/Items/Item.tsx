@@ -23,6 +23,18 @@ export const Item: React.FunctionComponent = () => {
   const { data: images } = trpc.image.getAllPictures.useQuery({
     id: item?.id as string,
   });
+  const { mutateAsync: deleteItem } = trpc.item.deleteItem.useMutation();
+
+  function removeItem(itemId: string) {
+    deleteItem(
+      { id: itemId },
+      {
+        onSuccess: () => {
+          router.push(`/user/${user?.id}`);
+        },
+      }
+    );
+  }
 
   return (
     <>
@@ -68,11 +80,19 @@ export const Item: React.FunctionComponent = () => {
               <div className="flex w-[50%] flex-col justify-between gap-2 xs:flex-row s:w-full s:flex-col">
                 <h2 className="text-2xl">all users items</h2>
                 {user?.id === item?.userId ? (
-                  <Link href={`${asPath}/edit`}>
-                    <button className="self-start rounded-md bg-green py-2 px-4 text-light s:text-2xl">
-                      edit item
+                  <div className="flex w-full flex-col justify-between">
+                    <Link href={`${asPath}/edit`}>
+                      <button className="w-[75%] self-start rounded-md bg-green py-2 px-4 text-light s:text-2xl">
+                        edit item
+                      </button>
+                    </Link>
+                    <button
+                      onClick={() => removeItem(id as string)}
+                      className="w-[75%] self-start  rounded-md bg-green py-2 px-4 text-light s:text-2xl"
+                    >
+                      delete item
                     </button>
-                  </Link>
+                  </div>
                 ) : (
                   <button
                     onClick={() => setIsOpen(true)}

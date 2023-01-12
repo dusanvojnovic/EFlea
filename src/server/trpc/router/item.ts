@@ -119,4 +119,19 @@ export const itemRouter = router({
         console.error(error);
       }
     }),
+  deleteItem: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        const item = await ctx.prisma.item.delete({
+          where: {
+            id,
+          },
+        });
+        return item;
+      } catch (error) {
+        console.error(error);
+      }
+    }),
 });
