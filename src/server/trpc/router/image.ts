@@ -35,17 +35,15 @@ export const imageRouter = router({
       }
     }),
   removePicture: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ url: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const { id } = input;
+      const { url } = input;
       try {
-        const picture = await ctx.prisma.image.delete({
+        await ctx.prisma.image.delete({
           where: {
-            id,
+            url,
           },
         });
-        console.log(picture);
-        return { message: "picture successfully deleted" };
       } catch (error) {
         console.error(error);
       }
