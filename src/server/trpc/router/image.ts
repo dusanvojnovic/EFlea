@@ -34,14 +34,16 @@ export const imageRouter = router({
         console.error(error);
       }
     }),
-  removePicture: publicProcedure
-    .input(z.object({ url: z.string() }))
+  removePictures: publicProcedure
+    .input(z.object({ urls: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
-      const { url } = input;
+      const { urls } = input;
       try {
-        await ctx.prisma.image.delete({
+        await ctx.prisma.image.deleteMany({
           where: {
-            url,
+            url: {
+              in: urls,
+            },
           },
         });
       } catch (error) {
