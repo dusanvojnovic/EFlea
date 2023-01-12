@@ -93,7 +93,7 @@ model Item {
 model Image {
   id     String  @id @default(cuid())
   url    String
-  item   Item?   @relation(fields: [itemId], references: [id])
+  item   Item?   @relation(fields: [itemId], references: [id], onDelete: Cascade)
   itemId String?
 
   @@index([itemId])
