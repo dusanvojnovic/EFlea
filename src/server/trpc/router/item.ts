@@ -124,12 +124,11 @@ export const itemRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { id } = input;
       try {
-        const item = await ctx.prisma.item.delete({
+        await ctx.prisma.item.delete({
           where: {
             id,
           },
         });
-        return item;
       } catch (error) {
         console.error(error);
       }
