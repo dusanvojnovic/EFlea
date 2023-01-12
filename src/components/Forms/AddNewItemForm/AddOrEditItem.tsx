@@ -66,7 +66,14 @@ export const AddOrEditItemForm: React.FunctionComponent<AddOrEditItemProps> = ({
         });
       } else if (formAction === "edit") {
         if (!itemId) return;
-        editItem({ ...data, itemId });
+        editItem(
+          { ...data, itemId },
+          {
+            onSuccess: () => {
+              router.push(`/category/${itemData.category}/${itemId}`);
+            },
+          }
+        );
       }
     } else {
       setFormIsValid(false);
