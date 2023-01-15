@@ -12,7 +12,7 @@ import { ImageConfig } from "../../../utils/imageConfig";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
 import { UpdateFields } from "./AddOrEditItem";
 
-interface BlobWithProgress extends Blob {
+export interface BlobWithProgress extends Blob {
   progress: number;
 }
 
