@@ -21,7 +21,12 @@ export const EditItemPhotos: React.FunctionComponent<EditItemPhotosProps> = ({
     }
   }
 
-  function removeImages() {
+  function removeImages(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    if (selectedImages.length == images.length) {
+      alert("there must be at least one picture");
+      return;
+    }
     deleteImages({ urls: selectedImages });
   }
 
