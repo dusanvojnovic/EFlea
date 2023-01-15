@@ -31,7 +31,7 @@ export const ItemPreview: React.FunctionComponent<ItemPreviewProps> = ({
         </div>
       </Link>
       <div className="flex justify-between p-4">
-        <h3 className="mt-0 w-[60%] text-2xl ">{description}</h3>
+        <h3 className="mt-0 w-[60%] break-words text-2xl ">{description}</h3>
         {previewPicture && (
           <Image
             className="rounded-md"

@@ -6,6 +6,7 @@ import {
 } from "next";
 import { AddOrEditItemForm } from "../../../../components/Forms/AddNewItemForm/AddOrEditItem";
 import { trpc } from "../../../../utils/trpc";
+import { BlobWithProgress } from "../../../../components/Forms/AddNewItemForm/DragAndDrop";
 
 const Edit: NextPage = ({
   id,
@@ -13,16 +14,19 @@ const Edit: NextPage = ({
   const { data: itemData } = trpc.item.getItemById.useQuery({ id });
   const { data: imgUrl } = trpc.image.getAllPictures.useQuery({ id });
   const imagesUrl: string[] = [];
+
   if (!imgUrl) {
     return <div>not found </div>;
   } else {
     imgUrl.forEach((img) => imagesUrl.push(img.url));
   }
 
+  const imageFiles: BlobWithProgress[] = [];
+
   return (
     <div>
       <AddOrEditItemForm
-        itemData={{ ...itemData!, imagesUrl }}
+        itemData={{ ...itemData!, imagesUrl, imgFiles: imageFiles }}
         formAction="edit"
         itemId={id}
       />

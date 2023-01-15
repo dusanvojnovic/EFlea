@@ -8,18 +8,21 @@ import { ItemType } from "../../../schema/item.schema";
 import { validateFormData } from "../../../utils/multistepFormValidator";
 import { trpc } from "../../../utils/trpc";
 import { DragAndDrop } from "./DragAndDrop";
+import { EditItemPhotos } from "./EditItemPhotos";
 import { ItemInfoForm } from "./ItemInfoForm";
 import { PricingInfoForm } from "./PricingInfoForm";
-
-interface AddOrEditItemProps {
-  itemData: ItemType;
-  formAction: "add" | "edit";
-  itemId?: string;
-}
 
 export type UpdateFields = {
   updateFields: (fields: Partial<ItemType>) => void;
 };
+
+export type FormAction = "add" | "edit";
+
+interface AddOrEditItemProps {
+  itemData: ItemType;
+  formAction: FormAction;
+  itemId?: string;
+}
 
 export const AddOrEditItemForm: React.FunctionComponent<AddOrEditItemProps> = ({
   itemData,
@@ -36,6 +39,16 @@ export const AddOrEditItemForm: React.FunctionComponent<AddOrEditItemProps> = ({
     });
   };
 
+  const formSteps = [
+    <ItemInfoForm {...data} updateFields={updateFields} />,
+    <PricingInfoForm {...data} updateFields={updateFields} />,
+    <DragAndDrop {...data} updateFields={updateFields} />,
+  ];
+
+  if (formAction == "edit") {
+    formSteps.splice(2, 0, <EditItemPhotos images={itemData.imagesUrl} />);
+  }
+
   const {
     steps,
     currentStepIndex,
@@ -44,11 +57,7 @@ export const AddOrEditItemForm: React.FunctionComponent<AddOrEditItemProps> = ({
     next,
     back,
     formStep,
-  } = useMultistepForm([
-    <ItemInfoForm {...data} updateFields={updateFields} />,
-    <PricingInfoForm {...data} updateFields={updateFields} />,
-    <DragAndDrop {...data} updateFields={updateFields} />,
-  ]);
+  } = useMultistepForm(formSteps);
 
   const { handleSubmit } = useForm<FieldValues>();
 
@@ -57,7 +66,7 @@ export const AddOrEditItemForm: React.FunctionComponent<AddOrEditItemProps> = ({
   const { mutateAsync: editItem } = trpc.item.editItem.useMutation();
 
   const onSubmit = () => {
-    if (validateFormData(data)) {
+    if (validateFormData(data, formAction)) {
       if (formAction === "add") {
         addItem(data, {
           onSuccess: () => {

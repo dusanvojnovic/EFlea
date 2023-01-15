@@ -47,7 +47,9 @@ export const Item: React.FunctionComponent = () => {
           <div className="flex flex-col rounded-sm border border-green p-8 s:flex-row s:justify-around">
             <div className="mb-12 w-full s:mb-0 s:w-[50%] ">
               <h1 className="m-0 mb-12 self-start text-4xl">{item?.title}</h1>
-              <h3 className="text-2xl">{item?.description}</h3>
+              <h3 className="w-[80%] break-words text-2xl">
+                {item?.description}
+              </h3>
             </div>
             <div className="flex flex-col justify-between">
               <div className="flex flex-col">
