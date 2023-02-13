@@ -18,6 +18,7 @@ const categories = [
   "telephones",
   "tools and equipment",
   "watches",
+  "other",
 ];
 
 const Home: NextPage = () => {

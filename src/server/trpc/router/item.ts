@@ -18,6 +18,21 @@ export const itemRouter = router({
         throw new Error("Something went wrong");
       }
     }),
+  getItemsForListPreview: publicProcedure
+    .input(z.object({ category: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { category } = input;
+      try {
+        const items = await ctx.prisma.item.findMany({
+          where: {
+            category,
+          },
+        });
+        return items.slice(0, 5);
+      } catch (error) {
+        throw new Error("Something went wrong");
+      }
+    }),
   getItemsByUser: publicProcedure.query(async ({ ctx }) => {
     try {
       const items = await ctx.prisma.item.findMany({
