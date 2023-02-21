@@ -2,24 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { CategoriesPreviewList } from "../components/Categories/CategoriesPreviewList";
 import { SearchBox } from "../components/SearchBox/SearchBox";
-
-const categories = [
-  "antiques",
-  "bicycles",
-  "books and comics",
-  "clothes",
-  "computers",
-  "games and toys",
-  "garden and yard",
-  "home appliances",
-  "music and music gear",
-  "photo cameras",
-  "shoes",
-  "telephones",
-  "tools and equipment",
-  "watches",
-  "other",
-];
+import { categories } from "../utils/categories";
 
 const Home: NextPage = () => {
   return (

@@ -2,18 +2,21 @@ import React from "react";
 import { CategoryPreview } from "./CategoryPreview";
 
 interface CategoriesPreviewListProps {
-  categories: string[];
+  categories: Record<string, string[]>;
 }
 
 export const CategoriesPreviewList: React.FunctionComponent<
   CategoriesPreviewListProps
 > = ({ categories }) => {
+  const categoryPreview = [];
+  for (const category in categories) {
+    categoryPreview.push(
+      <CategoryPreview key={category} categoryName={category} />
+    );
+  }
   return (
     <div className="my-40 flex flex-col content-center justify-center">
-      {/* <div className="mx-12 my-[12rem] grid w-[70%] grid-cols-fluid gap-[10rem] capitalize sm:mx-auto"> */}
-      {categories.map((category) => {
-        return <CategoryPreview key={category} categoryName={category} />;
-      })}
+      {categoryPreview}
     </div>
   );
 };

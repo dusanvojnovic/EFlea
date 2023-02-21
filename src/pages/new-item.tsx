@@ -4,6 +4,7 @@ import { AddOrEditItemForm } from "../components/Forms/AddNewItemForm/AddOrEditI
 const INITIAL_DATA = {
   title: "",
   category: "",
+  subcategory: "",
   price: "",
   description: "",
   imgFiles: [],

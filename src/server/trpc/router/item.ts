@@ -52,6 +52,7 @@ export const itemRouter = router({
         description,
         title,
         category,
+        subcategory,
         price,
         acceptExchange,
         fixedPrice,
@@ -66,10 +67,11 @@ export const itemRouter = router({
             price,
             title,
             category,
+            subcategory,
             acceptExchange,
             fixedPrice,
             images: {
-              create: imagesUrl.map((url) => ({
+              create: imagesUrl?.map((url) => ({
                 url,
               })),
             },
@@ -82,34 +84,66 @@ export const itemRouter = router({
       }
     }),
   editItem: publicProcedure
-    .input(itemSchema.merge(z.object({ itemId: z.string() })))
+    .input(
+      itemSchema.merge(
+        z.object({ itemId: z.string(), deletedImages: z.boolean() })
+      )
+    )
     .mutation(async ({ ctx, input }) => {
       const {
         description,
         title,
         category,
+        subcategory,
         price,
         acceptExchange,
         fixedPrice,
         imagesUrl,
         itemId,
+        deletedImages,
       } = input;
 
+      const images = await ctx.prisma.image.findMany({
+        where: {
+          itemId,
+        },
+      });
+
+      const imgUrls: string[] = [];
+      images.forEach((img) => {
+        imgUrls.push(img.url);
+      });
+
+      const itsSameImages = imagesUrl?.every(
+        (url, index) => url === imgUrls[index]
+      );
+
       try {
-        const updatedItem = await ctx.prisma.item.update({
-          data: {
-            description,
-            price,
-            title,
-            category,
-            acceptExchange,
-            fixedPrice,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let data: any = {
+          description,
+          price,
+          title,
+          category,
+          subcategory,
+          acceptExchange,
+          fixedPrice,
+        };
+        if (
+          (!itsSameImages && !deletedImages) ||
+          (!itsSameImages && deletedImages)
+        ) {
+          data = {
+            ...data,
             images: {
-              create: imagesUrl.map((url) => ({
+              create: imagesUrl?.map((url) => ({
                 url,
               })),
             },
-          },
+          };
+        }
+        const updatedItem = await ctx.prisma.item.update({
+          data,
           where: {
             id: itemId,
           },

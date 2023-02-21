@@ -4,34 +4,22 @@ import { ItemType } from "../../../schema/item.schema";
 import { Input } from "../Input/Input";
 import { Select } from "../Select/Select";
 import { UpdateFields } from "./AddOrEditItem";
-
-const options = [
-  "antiques",
-  "bicycles",
-  "books and comics",
-  "clothes",
-  "computers",
-  "games and toys",
-  "garden and yard",
-  "home appliances",
-  "music and music gear",
-  "photo cameras",
-  "shoes",
-  "telephones",
-  "tools and equipment",
-  "watches",
-  "other",
-];
+import { categories } from "../../../utils/categories";
 
 export const ItemInfoForm: React.FunctionComponent<
   Partial<ItemType> & UpdateFields
-> = ({ title, description, category, updateFields }) => {
+> = ({ title, description, category, subcategory, updateFields }) => {
   const {
     register,
     formState: { errors },
   } = useForm<FieldValues>();
 
-  const categoryIndex = options.indexOf(category as string);
+  const categoryNames = [];
+  for (const category in categories) {
+    categoryNames.push(category);
+  }
+
+  const categoryIndex = categoryNames.indexOf(category as string);
 
   return (
     <>
@@ -56,10 +44,22 @@ export const ItemInfoForm: React.FunctionComponent<
         name="category"
         // value={category as string}
         categoryIndex={categoryIndex}
-        options={options}
+        options={categoryNames}
         validationSchema={{ required: "You must select category" }}
         onChange={(e) => updateFields({ category: e.target.value })}
       />
+
+      {category && (
+        <Select
+          register={register}
+          name="subcategory"
+          // value={category as string}
+          categoryIndex={categories[category].indexOf(subcategory)}
+          options={categories[category]}
+          validationSchema={{ required: "You must select subcategory" }}
+          onChange={(e) => updateFields({ subcategory: e.target.value })}
+        />
+      )}
 
       <Input
         element="textarea"

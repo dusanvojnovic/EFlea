@@ -32,6 +32,7 @@ export const AddOrEditItemForm: React.FunctionComponent<AddOrEditItemProps> = ({
   const [data, setData] = useState(itemData);
   const [formIsValid, setFormIsValid] = useState<boolean>(true);
   const router = useRouter();
+  const [deletedImages, setDeletedImages] = useState(false);
 
   const updateFields = (fields: Partial<ItemType>) => {
     setData((previousState) => {
@@ -46,7 +47,14 @@ export const AddOrEditItemForm: React.FunctionComponent<AddOrEditItemProps> = ({
   ];
 
   if (formAction == "edit") {
-    formSteps.splice(2, 0, <EditItemPhotos images={itemData.imagesUrl} />);
+    formSteps.splice(
+      2,
+      0,
+      <EditItemPhotos
+        images={itemData.imagesUrl as string[]}
+        setDeletedImages={setDeletedImages}
+      />
+    );
   }
 
   const {
@@ -76,7 +84,7 @@ export const AddOrEditItemForm: React.FunctionComponent<AddOrEditItemProps> = ({
       } else if (formAction === "edit") {
         if (!itemId) return;
         editItem(
-          { ...data, itemId },
+          { ...data, itemId, deletedImages },
           {
             onSuccess: () => {
               router.push(`/category/${itemData.category}/${itemId}`);
