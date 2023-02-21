@@ -1,12 +1,11 @@
-import { Item } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 import { ItemsList } from "../../components/Items/ItemsList";
 import { Layout } from "../../components/Layout/Layout";
 import { trpc } from "../../utils/trpc";
 
-const UserPage: React.FunctionComponent = ({}) => {
-  const { data: userItems } = trpc.item.getItemsByUser.useQuery();
+const UserPage: React.FunctionComponent = () => {
+  const { data: userItems, isLoading } = trpc.item.getItemsByUser.useQuery();
 
   return (
     <Layout>
@@ -15,7 +14,10 @@ const UserPage: React.FunctionComponent = ({}) => {
           add new item
         </button>
       </Link>
-      <ItemsList items={userItems as Item[]} />
+      {userItems && userItems.length > 0 && <ItemsList items={userItems} />}
+      {userItems?.length === 0 && !isLoading && (
+        <p>You dont have any items to sell</p>
+      )}
     </Layout>
   );
 };
