@@ -4,12 +4,15 @@ import { trpc } from "../../../utils/trpc";
 
 interface EditItemPhotosProps {
   images: string[];
+  setDeletedImages: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const EditItemPhotos: React.FunctionComponent<EditItemPhotosProps> = ({
   images,
+  setDeletedImages,
 }) => {
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [displayedImages, setDisplayedImages] = useState<string[]>(images);
 
   const { mutateAsync: deleteImages } = trpc.image.removePictures.useMutation();
 
@@ -27,13 +30,18 @@ export const EditItemPhotos: React.FunctionComponent<EditItemPhotosProps> = ({
       alert("there must be at least one picture");
       return;
     }
+    const remainingImages = images.filter(
+      (img) => !selectedImages.includes(img)
+    );
+    setDisplayedImages(remainingImages);
+    setDeletedImages(true);
     deleteImages({ urls: selectedImages });
   }
 
   return (
     <>
       <div className="flex flex-wrap gap-4">
-        {images.map((image) => {
+        {displayedImages.map((image) => {
           const imageIsSelected = selectedImages.includes(image);
           return (
             <div key={image} className="relative h-[12rem] w-[14rem]">
