@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { Input } from "../Input/Input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { trpc } from "../../../utils/trpc";
+import { signIn } from "next-auth/react";
 import { CreateUserInput } from "../../../schema/user.schema";
-import { useRouter } from "next/router";
 
 export const RegisterForm: React.FunctionComponent = () => {
   const [passwodFieldValues, setPasswordFieldValues] = useState<{
@@ -23,13 +23,15 @@ export const RegisterForm: React.FunctionComponent = () => {
     reValidateMode: "onSubmit",
   });
 
-  const router = useRouter();
-
   const { mutateAsync } = trpc.user.registerUser.useMutation();
 
   const onSubmit = async (data: CreateUserInput) => {
     await mutateAsync(data);
-    router.push("/");
+    signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      callbackUrl: "/",
+    });
   };
 
   return (
