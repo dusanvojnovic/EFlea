@@ -9,8 +9,15 @@ export const userRouter = router({
   registerUser: publicProcedure
     .input(createUserSchema)
     .mutation(async ({ ctx, input }) => {
-      const { firstName, lastName, email, city, password, confirmPassword } =
-        input;
+      const {
+        firstName,
+        lastName,
+        email,
+        city,
+        phoneNumber,
+        password,
+        confirmPassword,
+      } = input;
       if (confirmPassword !== password)
         throw new trpc.TRPCError({
           code: "BAD_REQUEST",
@@ -25,6 +32,7 @@ export const userRouter = router({
             lastName,
             email,
             city,
+            phoneNumber,
             password: hashedPassword,
           },
         });

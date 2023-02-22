@@ -33,7 +33,7 @@ export const RegisterForm: React.FunctionComponent = () => {
   };
 
   return (
-    <div className="bg-gray-200 mx-auto my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-12">
+    <div className="bg-gray-200 mx-auto my-28 flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-12">
       <form onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)}>
         <Input
           name="firstName"
@@ -73,6 +73,12 @@ export const RegisterForm: React.FunctionComponent = () => {
                 /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
             },
           }}
+          errors={errors}
+        />
+        <Input
+          name="phoneNumber"
+          placeholder="Phone Number"
+          register={register}
           errors={errors}
         />
         <Input
