@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "../Input/Input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { trpc } from "../../../utils/trpc";
@@ -7,17 +7,20 @@ import { CreateUserInput } from "../../../schema/user.schema";
 import { useRouter } from "next/router";
 
 export const RegisterForm: React.FunctionComponent = () => {
+  const [passwodFieldValues, setPasswordFieldValues] = useState<{
+    password: string;
+    confirmPassword: string;
+  }>({ password: "", confirmPassword: "" });
+
+  const { password, confirmPassword } = passwodFieldValues;
+
   const {
     register,
     handleSubmit,
     getValues,
-    formState: { errors, dirtyFields },
+    formState: { errors },
   } = useForm<FieldValues>({
     reValidateMode: "onSubmit",
-    defaultValues: {
-      password: "",
-      confirmPassword: "",
-    },
   });
 
   const router = useRouter();
@@ -88,7 +91,6 @@ export const RegisterForm: React.FunctionComponent = () => {
         <Input
           name="password"
           isPasswordField
-          isDirty={dirtyFields.password}
           placeholder="Password"
           register={register}
           validationSchema={{
@@ -99,11 +101,17 @@ export const RegisterForm: React.FunctionComponent = () => {
             },
           }}
           errors={errors}
+          value={password}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setPasswordFieldValues({
+              ...passwodFieldValues,
+              password: event.currentTarget.value,
+            });
+          }}
         />
         <Input
           name="confirmPassword"
           isPasswordField
-          isDirty={dirtyFields.confirmPassword}
           placeholder="Confirm Password"
           register={register}
           validationSchema={{
@@ -113,6 +121,13 @@ export const RegisterForm: React.FunctionComponent = () => {
             },
           }}
           errors={errors}
+          value={confirmPassword}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setPasswordFieldValues({
+              ...passwodFieldValues,
+              confirmPassword: event.currentTarget.value,
+            });
+          }}
         />
         <button
           className="mx-auto my-8 flex w-[80%] cursor-pointer justify-center self-center rounded-md border-none bg-red p-4 text-[1.5rem] text-white hover:bg-red disabled:cursor-not-allowed"
