@@ -58,7 +58,9 @@ export const Header: React.FunctionComponent = () => {
                 <Link href={`/user/${session?.user?.id}`}>My Items</Link>
               </li>
               <li className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]">
-                Edit Account
+                <Link href={`/user/${session?.user?.id}/edit`}>
+                  Edit account
+                </Link>
               </li>
               <li
                 className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]"

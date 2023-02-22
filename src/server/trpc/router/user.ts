@@ -1,4 +1,4 @@
-import { createUserSchema } from "../../../schema/user.schema";
+import { createUserSchema, editUserSchema } from "../../../schema/user.schema";
 import { router, publicProcedure } from "../trpc";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import * as trpc from "@trpc/server";
@@ -32,7 +32,7 @@ export const userRouter = router({
             lastName,
             email,
             city,
-            phoneNumber,
+            phoneNumber: phoneNumber || "",
             password: hashedPassword,
           },
         });
@@ -51,6 +51,27 @@ export const userRouter = router({
             message: "Something went wrong",
           });
         }
+      }
+    }),
+  editUser: publicProcedure
+    .input(editUserSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { firstName, lastName, city, phoneNumber } = input;
+      try {
+        const user = await ctx.prisma.user.update({
+          data: {
+            firstName,
+            lastName,
+            city,
+            phoneNumber: phoneNumber || "",
+          },
+          where: {
+            id: ctx.session?.user?.id,
+          },
+        });
+        return user;
+      } catch (error) {
+        console.error(error);
       }
     }),
   getUserById: publicProcedure

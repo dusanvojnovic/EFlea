@@ -1,10 +1,10 @@
+import { NextPage } from "next";
 import Link from "next/link";
-import React from "react";
-import { ItemsList } from "../../components/Items/ItemsList";
-import { Layout } from "../../components/Layout/Layout";
-import { trpc } from "../../utils/trpc";
+import { ItemsList } from "../../../components/Items/ItemsList";
+import { Layout } from "../../../components/Layout/Layout";
+import { trpc } from "../../../utils/trpc";
 
-const UserPage: React.FunctionComponent = () => {
+const UserPage: NextPage = () => {
   const { data: userItems, isLoading } = trpc.item.getItemsByUser.useQuery();
 
   return (
