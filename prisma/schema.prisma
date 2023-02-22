@@ -54,17 +54,18 @@ model Session {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  firstName String
-  lastName  String
-  email     String    @unique
-  city      String
-  password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  accounts  Account[]
-  sessions  Session[]
-  items     Item[]
+  id          String    @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String    @unique
+  city        String
+  password    String
+  phoneNumber String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  accounts    Account[]
+  sessions    Session[]
+  items       Item[]
 }
 
 model VerificationToken {
@@ -84,7 +85,7 @@ model Item {
   price          String
   acceptExchange Boolean
   fixedPrice     Boolean
-  user           User    @relation(fields: [userId], references: [id])
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String
   images         Image[]
 
