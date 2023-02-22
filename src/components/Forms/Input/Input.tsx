@@ -52,13 +52,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="box-border flex flex-col py-4 px-0 text-[1.5rem]">
+        {label && <label className="ml-1 mb-1">{label}</label>}
         {element === "input" && (
           <input
             className="relative box-border w-full rounded-md border border-solid border-green p-4 px-4"
             type={isPasswordField && !passwordIsVisible ? "password" : "text"}
             placeholder={placeholder}
             id={name}
-            value={value}
+            defaultValue={value}
             {...register(name, validationSchema)}
             {...props}
             onChange={onChange}
