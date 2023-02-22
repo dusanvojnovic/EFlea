@@ -1,20 +1,18 @@
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "../Input/Input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { LoginUserInput } from "../../../schema/user.schema";
 
 export const LoginForm: React.FunctionComponent = () => {
+  const [passwordFieldValue, setPasswordFieldValue] = useState("");
   const {
     register,
     handleSubmit,
-    formState: { errors, dirtyFields },
+    formState: { errors },
   } = useForm<FieldValues>({
     reValidateMode: "onSubmit",
-    defaultValues: {
-      password: "",
-    },
   });
 
   const onSubmit = async (data: LoginUserInput) => {
@@ -41,7 +39,6 @@ export const LoginForm: React.FunctionComponent = () => {
         <Input
           name="password"
           isPasswordField
-          isDirty={dirtyFields.password}
           placeholder="Password"
           register={register}
           validationSchema={{
@@ -52,6 +49,10 @@ export const LoginForm: React.FunctionComponent = () => {
             },
           }}
           errors={errors}
+          value={passwordFieldValue}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setPasswordFieldValue(event.currentTarget.value);
+          }}
         />
         <button
           className="mx-auto my-8 flex w-[80%] cursor-pointer justify-center self-center rounded-md border-none bg-red p-4 text-[1.5rem] text-white hover:bg-red disabled:cursor-not-allowed"

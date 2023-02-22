@@ -27,7 +27,6 @@ interface InputProps {
     pattern?: ValidationRule<RegExp>;
   };
   errors?: Partial<FieldErrorsImpl<{ [x: string]: string }>>;
-  isDirty?: boolean;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -43,7 +42,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       checked,
       onChange,
       validationSchema,
-      isDirty = false,
       errors,
       ...props
     },
@@ -118,7 +116,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {errors && (
           <p className="pt-2 text-[1.4rem] text-red">{errors[name]?.message}</p>
         )}
-        {isPasswordField && isDirty ? (
+        {isPasswordField && value && value.length > 0 ? (
           <IconContext.Provider value={{ size: "1.5rem", color: "black" }}>
             <i
               onClick={() => setPasswordIsVisible(!passwordIsVisible)}
