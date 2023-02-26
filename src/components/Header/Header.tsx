@@ -1,6 +1,6 @@
-import Link from "next/link";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
 
 export const Header: React.FunctionComponent = () => {
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
@@ -8,19 +8,18 @@ export const Header: React.FunctionComponent = () => {
   const { data: session } = useSession();
 
   useEffect(() => {
-    const handler = (event) => {
-      if (dropdownMenuRef.current?.contains(event.currentTarget)) {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target as Node)) {
         setDropdownVisible(false);
-        console.log(dropdownMenuRef.current);
       } else {
         return;
       }
     };
 
-    document.addEventListener("mousedown", handler);
+    document.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
-      document.removeEventListener("mousedown", handler);
+      document.removeEventListener("mousedown", handleOutsideClick);
     };
   });
 
@@ -28,8 +27,9 @@ export const Header: React.FunctionComponent = () => {
     setDropdownVisible((prevState) => !prevState);
   }
 
-  function handleMenuItemClick() {
+  function handleMenuItemClick(event: React.MouseEvent<HTMLLIElement>) {
     setDropdownVisible(false);
+    event.stopPropagation()
   }
 
   function logout() {
@@ -62,13 +62,13 @@ export const Header: React.FunctionComponent = () => {
                 <div className="absolute top-[4.5rem] right-0 w-[15rem] origin-top animate-grow-down rounded-bl-lg bg-green pt-[1rem] pb-[2rem] pl-[3rem] pr-[3rem] text-white	">
                   <ul className="m-0 list-none text-[1.5rem]">
                     <li
-                      onClick={handleMenuItemClick}
+                      onClick={(event) => handleMenuItemClick(event)}
                       className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]"
                     >
                       <Link href={`/user/${session?.user?.id}`}>My Items</Link>
                     </li>
                     <li
-                      onClick={handleMenuItemClick}
+                      onClick={(event) => handleMenuItemClick(event)}
                       className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]"
                     >
                       <Link href={`/user/${session?.user?.id}/edit`}>
@@ -77,8 +77,8 @@ export const Header: React.FunctionComponent = () => {
                     </li>
                     <li
                       className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]"
-                      onClick={() => {
-                        handleMenuItemClick();
+                      onClick={(event) => {
+                        handleMenuItemClick(event);
                         logout();
                       }}
                     >
