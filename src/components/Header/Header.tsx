@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 
 export const Header: React.FunctionComponent = () => {
@@ -7,22 +7,33 @@ export const Header: React.FunctionComponent = () => {
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
 
-  function closeDropdownMenu(e: MouseEvent) {
-    if (
-      dropdownMenuRef.current &&
-      dropdownVisible &&
-      !dropdownMenuRef.current.contains(e.target as Node)
-    ) {
-      setDropdownVisible(false);
-    }
+  useEffect(() => {
+    const handler = (event) => {
+      if (dropdownMenuRef.current?.contains(event.currentTarget)) {
+        setDropdownVisible(false);
+        console.log(dropdownMenuRef.current);
+      } else {
+        return;
+      }
+    };
+
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
+
+  function handleDropdownClick() {
+    setDropdownVisible((prevState) => !prevState);
+  }
+
+  function handleMenuItemClick() {
+    setDropdownVisible(false);
   }
 
   function logout() {
     signOut({ callbackUrl: "/login" });
-  }
-
-  if (typeof window !== "undefined") {
-    document.addEventListener("mousedown", closeDropdownMenu);
   }
 
   return (
@@ -41,34 +52,42 @@ export const Header: React.FunctionComponent = () => {
             </Link>
           </div>
         ) : (
-          <div
-            className="mx-[1rem] cursor-pointer"
-            onClick={() => setDropdownVisible(!dropdownVisible)}
-          >
-            My Account
-          </div>
-        )}
-        {dropdownVisible && (
-          <div
-            ref={dropdownMenuRef}
-            className="absolute top-[4.5rem] right-0 w-[15rem] origin-top animate-grow-down rounded-bl-lg bg-green pt-[1rem] pb-[2rem] pl-[3rem] pr-[3rem] text-white	"
-          >
-            <ul className="m-0 list-none text-[1.5rem]">
-              <li className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]">
-                <Link href={`/user/${session?.user?.id}`}>My Items</Link>
-              </li>
-              <li className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]">
-                <Link href={`/user/${session?.user?.id}/edit`}>
-                  Edit account
-                </Link>
-              </li>
-              <li
-                className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]"
-                onClick={logout}
-              >
-                Logout
-              </li>
-            </ul>
+          <div ref={dropdownMenuRef}>
+            <div
+              className="mx-[1rem] cursor-pointer"
+              onClick={handleDropdownClick}
+            >
+              My Account
+              {dropdownVisible && (
+                <div className="absolute top-[4.5rem] right-0 w-[15rem] origin-top animate-grow-down rounded-bl-lg bg-green pt-[1rem] pb-[2rem] pl-[3rem] pr-[3rem] text-white	">
+                  <ul className="m-0 list-none text-[1.5rem]">
+                    <li
+                      onClick={handleMenuItemClick}
+                      className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]"
+                    >
+                      <Link href={`/user/${session?.user?.id}`}>My Items</Link>
+                    </li>
+                    <li
+                      onClick={handleMenuItemClick}
+                      className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]"
+                    >
+                      <Link href={`/user/${session?.user?.id}/edit`}>
+                        Edit account
+                      </Link>
+                    </li>
+                    <li
+                      className="cursor-pointer border-b border-dotted px-0 py-[0.75rem]"
+                      onClick={() => {
+                        handleMenuItemClick();
+                        logout();
+                      }}
+                    >
+                      Logout
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
