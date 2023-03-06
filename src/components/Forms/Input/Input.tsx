@@ -77,7 +77,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...register(name, validationSchema)}
             {...props}
             onChange={onChange}
-          />
+          ></textarea>
         )}
         {element === "file" && (
           <input

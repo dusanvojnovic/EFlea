@@ -168,6 +168,27 @@ export const itemRouter = router({
         console.error(error);
       }
     }),
+  getItemSeller: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        const item = await ctx.prisma.item.findFirst({
+          where: {
+            id,
+          },
+        });
+        const itemSeller = await ctx.prisma.user.findFirst({
+          where: {
+            id: item?.userId,
+          },
+        });
+        return itemSeller;
+      } catch (error) {
+        console.error(error);
+      }
+    }),
+
   deleteItem: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
