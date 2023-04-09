@@ -22,6 +22,6 @@ export const loginUserSchema = z.object({
   password: z.string(),
 });
 
-export type CreateUserInput = z.TypeOf<typeof createUserSchema>;
-export type EditUserInput = z.TypeOf<typeof editUserSchema>;
-export type LoginUserInput = z.TypeOf<typeof loginUserSchema>;
+export type CreateUserType = z.TypeOf<typeof createUserSchema>;
+export type EditUserType = z.TypeOf<typeof editUserSchema>;
+export type LoginUserType = z.TypeOf<typeof loginUserSchema>;
