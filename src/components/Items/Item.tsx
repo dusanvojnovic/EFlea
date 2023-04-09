@@ -10,27 +10,15 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 export const Item: React.FunctionComponent = () => {
-  let roomId: string;
-
-  async function generateRoomId() {
-    const { customAlphabet } = await import("nanoid");
-    return customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 6);
-  }
-
-  generateRoomId()
-    .then((result) => {
-      roomId = result();
-    })
-    .catch((err) => console.error(err));
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const router = useRouter();
   const { data: session } = useSession();
   const { asPath } = router;
+  const utils = trpc.useContext();
   const { id } = router.query;
   const { data: item } = trpc.item.getItemById.useQuery({ id: id as string });
   const { data: itemSeller } = trpc.item.getItemSeller.useQuery({
-    id: item?.userId as string,
+    id: item?.id as string,
   });
   const { data: user } = trpc.user.getUserById.useQuery({
     id: session?.user?.id as string,
@@ -43,6 +31,15 @@ export const Item: React.FunctionComponent = () => {
   });
   const { mutateAsync: deleteItem } = trpc.item.deleteItem.useMutation();
 
+  const { mutateAsync: createConversation } =
+    trpc.conversation.createConversation.useMutation({
+      // onSettled: async () => {
+      //   await utils.conversation.getUserConversations.refetch({
+      //     id: session?.user?.id,
+      //   });
+      // },
+    });
+
   function removeItem(itemId: string) {
     deleteItem(
       { id: itemId },
@@ -54,8 +51,11 @@ export const Item: React.FunctionComponent = () => {
     );
   }
 
-  function createRoom() {
-    router.replace(`/messages/${roomId}`);
+  async function contactSellerHandler() {
+    const conversation = await createConversation({
+      participantsIds: [user?.id as string, itemSeller?.id as string],
+    });
+    router.replace(`/messages/${conversation?.id}`);
   }
 
   return (
@@ -121,7 +121,7 @@ export const Item: React.FunctionComponent = () => {
                   </div>
                 ) : (
                   <button
-                    onClick={createRoom}
+                    onClick={contactSellerHandler}
                     className="self-start rounded-md bg-green py-2 px-4 text-light s:text-2xl"
                   >
                     contact user
