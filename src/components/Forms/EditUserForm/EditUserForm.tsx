@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { EditUserInput } from "../../../schema/user.schema";
+import { EditUserType } from "../../../schema/user.schema";
 import { trpc } from "../../../utils/trpc";
 import { Input } from "../Input/Input";
 
@@ -29,7 +29,7 @@ export const EditUserForm: React.FunctionComponent<EditUserFormProps> = ({
     },
   });
 
-  const onSubmit = async (data: EditUserInput) => {
+  const onSubmit = async (data: EditUserType) => {
     await editUser({ ...data });
   };
 

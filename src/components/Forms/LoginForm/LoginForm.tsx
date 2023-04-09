@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Input } from "../Input/Input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
-import { LoginUserInput } from "../../../schema/user.schema";
+import { LoginUserType } from "../../../schema/user.schema";
 
 export const LoginForm: React.FunctionComponent = () => {
   const [passwordFieldValue, setPasswordFieldValue] = useState("");
@@ -15,7 +15,7 @@ export const LoginForm: React.FunctionComponent = () => {
     reValidateMode: "onSubmit",
   });
 
-  const onSubmit = async (data: LoginUserInput) => {
+  const onSubmit = async (data: LoginUserType) => {
     await signIn("credentials", { ...data, callbackUrl: "/" });
   };
 

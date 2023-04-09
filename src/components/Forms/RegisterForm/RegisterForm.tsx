@@ -4,7 +4,7 @@ import { Input } from "../Input/Input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { trpc } from "../../../utils/trpc";
 import { signIn } from "next-auth/react";
-import { CreateUserInput } from "../../../schema/user.schema";
+import { CreateUserType } from "../../../schema/user.schema";
 
 export const RegisterForm: React.FunctionComponent = () => {
   const [passwodFieldValues, setPasswordFieldValues] = useState<{
@@ -25,7 +25,7 @@ export const RegisterForm: React.FunctionComponent = () => {
 
   const { mutateAsync } = trpc.user.registerUser.useMutation();
 
-  const onSubmit = async (data: CreateUserInput) => {
+  const onSubmit = async (data: CreateUserType) => {
     await mutateAsync(data);
     signIn("credentials", {
       email: data.email,
