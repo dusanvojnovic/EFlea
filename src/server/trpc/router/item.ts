@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { itemSchema } from "../../../schema/item.schema";
-import { publicProcedure, router } from "../trpc";
+import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const itemRouter = router({
   getItemsByCategory: publicProcedure
@@ -45,7 +45,7 @@ export const itemRouter = router({
       throw new Error("Something went wrong");
     }
   }),
-  addItem: publicProcedure
+  addItem: protectedProcedure
     .input(itemSchema)
     .mutation(async ({ ctx, input }) => {
       const {
@@ -60,7 +60,6 @@ export const itemRouter = router({
       } = input;
 
       try {
-        if (!ctx.session?.user?.id) return;
         const newItem = await ctx.prisma.item.create({
           data: {
             description,
@@ -168,6 +167,27 @@ export const itemRouter = router({
         console.error(error);
       }
     }),
+  getItemSeller: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        const item = await ctx.prisma.item.findFirst({
+          where: {
+            id,
+          },
+        });
+        const itemSeller = await ctx.prisma.user.findFirst({
+          where: {
+            id: item?.userId,
+          },
+        });
+        return itemSeller;
+      } catch (error) {
+        console.error(error);
+      }
+    }),
+
   deleteItem: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {

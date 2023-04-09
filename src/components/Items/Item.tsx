@@ -7,15 +7,21 @@ import { trpc } from "../../utils/trpc";
 import { Modal } from "../Modal/Modal";
 import { Image } from "@prisma/client";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export const Item: React.FunctionComponent = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const router = useRouter();
+  const { data: session } = useSession();
   const { asPath } = router;
+  const utils = trpc.useContext();
   const { id } = router.query;
   const { data: item } = trpc.item.getItemById.useQuery({ id: id as string });
+  const { data: itemSeller } = trpc.item.getItemSeller.useQuery({
+    id: item?.id as string,
+  });
   const { data: user } = trpc.user.getUserById.useQuery({
-    id: item?.userId as string,
+    id: session?.user?.id as string,
   });
   const { data: imagePreview } = trpc.image.getPreviewPicture.useQuery({
     id: item?.id as string,
@@ -24,6 +30,15 @@ export const Item: React.FunctionComponent = () => {
     id: item?.id as string,
   });
   const { mutateAsync: deleteItem } = trpc.item.deleteItem.useMutation();
+
+  const { mutateAsync: createConversation } =
+    trpc.conversation.createConversation.useMutation({
+      // onSettled: async () => {
+      //   await utils.conversation.getUserConversations.refetch({
+      //     id: session?.user?.id,
+      //   });
+      // },
+    });
 
   function removeItem(itemId: string) {
     deleteItem(
@@ -34,6 +49,13 @@ export const Item: React.FunctionComponent = () => {
         },
       }
     );
+  }
+
+  async function contactSellerHandler() {
+    const conversation = await createConversation({
+      participantsIds: [user?.id as string, itemSeller?.id as string],
+    });
+    router.replace(`/messages/${conversation?.id}`);
   }
 
   return (
@@ -60,8 +82,10 @@ export const Item: React.FunctionComponent = () => {
                     className="mb-4 h-40 w-[50%] rounded-sm s:w-[100%]"
                   />
                   <div className="flex flex-col justify-between">
-                    <h2 className="text-[1.7rem]">{user?.firstName}</h2>
-                    <h3 className="mb-0 text-[1.35rem] s:mb-6">{user?.city}</h3>
+                    <h2 className="text-[1.7rem]">{itemSeller?.firstName}</h2>
+                    <h3 className="mb-0 text-[1.35rem] s:mb-6">
+                      {itemSeller?.city}
+                    </h3>
                     <div className="flex  w-[35%] justify-between">
                       <div className="flex flex-col items-center self-center text-2xl">
                         <IconContext.Provider value={{ color: "#105652" }}>
@@ -90,14 +114,14 @@ export const Item: React.FunctionComponent = () => {
                     </Link>
                     <button
                       onClick={() => removeItem(id as string)}
-                      className="w-[75%] self-start  rounded-md bg-green py-2 px-4 text-light s:text-2xl"
+                      className="w-[75%] self-start rounded-md bg-green py-2 px-4 text-light s:text-2xl"
                     >
                       delete item
                     </button>
                   </div>
                 ) : (
                   <button
-                    onClick={() => setIsOpen(true)}
+                    onClick={contactSellerHandler}
                     className="self-start rounded-md bg-green py-2 px-4 text-light s:text-2xl"
                   >
                     contact user

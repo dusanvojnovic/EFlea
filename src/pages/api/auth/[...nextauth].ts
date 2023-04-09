@@ -35,8 +35,6 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        console.log("logged in");
-
         return {
           id: user.id,
           email: user.email,
@@ -65,6 +63,7 @@ export const authOptions: NextAuthOptions = {
   },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);

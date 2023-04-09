@@ -14,7 +14,7 @@ export const ItemInfoForm: React.FunctionComponent<
     formState: { errors },
   } = useForm<FieldValues>();
 
-  const categoryNames = [];
+  const categoryNames: string[] = [];
   for (const category in categories) {
     categoryNames.push(category);
   }
@@ -42,7 +42,6 @@ export const ItemInfoForm: React.FunctionComponent<
       <Select
         register={register}
         name="category"
-        // value={category as string}
         categoryIndex={categoryIndex}
         options={categoryNames}
         validationSchema={{ required: "You must select category" }}
@@ -53,7 +52,6 @@ export const ItemInfoForm: React.FunctionComponent<
         <Select
           register={register}
           name="subcategory"
-          // value={category as string}
           categoryIndex={categories[category].indexOf(subcategory)}
           options={categories[category]}
           validationSchema={{ required: "You must select subcategory" }}

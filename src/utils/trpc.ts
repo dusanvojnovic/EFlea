@@ -1,11 +1,17 @@
 // src/utils/trpc.ts
 import superjson from "superjson";
 
-import { httpBatchLink, loggerLink } from "@trpc/client";
+import {
+  createWSClient,
+  httpBatchLink,
+  loggerLink,
+  wsLink,
+} from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import type { GetInferenceHelpers } from "@trpc/server";
 
 import type { AppRouter } from "../server/trpc/router/_app";
+import { NextPageContext } from "next";
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
@@ -13,8 +19,36 @@ const getBaseUrl = () => {
   return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
 };
 
+const url = `${getBaseUrl()}/api/trpc`;
+
+function getEndingLink(ctx: NextPageContext | undefined) {
+  if (typeof window === "undefined") {
+    return httpBatchLink({
+      url,
+      headers() {
+        if (ctx?.req) {
+          // on ssr, forward client's headers to the server
+          return {
+            ...ctx.req.headers,
+            "x-ssr": "1",
+          };
+        }
+        return {};
+      },
+    });
+  }
+
+  const client = createWSClient({
+    url: process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:3001",
+  });
+
+  return wsLink({
+    client,
+  });
+}
+
 export const trpc = createTRPCNext<AppRouter>({
-  config() {
+  config({ ctx }) {
     return {
       transformer: superjson,
       links: [
@@ -24,9 +58,16 @@ export const trpc = createTRPCNext<AppRouter>({
             (opts.direction === "down" && opts.result instanceof Error),
         }),
         httpBatchLink({
-          url: `${getBaseUrl()}/api/trpc`,
+          url,
         }),
+        getEndingLink(ctx),
       ],
+      headers() {
+        if (ctx?.req) {
+          return { ...ctx.req.headers };
+        }
+        return {};
+      },
     };
   },
   ssr: false,

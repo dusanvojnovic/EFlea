@@ -9,7 +9,10 @@ export const Header: React.FunctionComponent = () => {
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
-      if (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target as Node)) {
+      if (
+        dropdownMenuRef.current &&
+        !dropdownMenuRef.current.contains(event.target as Node)
+      ) {
         setDropdownVisible(false);
       } else {
         return;
@@ -29,7 +32,7 @@ export const Header: React.FunctionComponent = () => {
 
   function handleMenuItemClick(event: React.MouseEvent<HTMLLIElement>) {
     setDropdownVisible(false);
-    event.stopPropagation()
+    event.stopPropagation();
   }
 
   function logout() {
@@ -40,7 +43,9 @@ export const Header: React.FunctionComponent = () => {
     <header className="fixed top-0 left-0 z-30 h-[4.5rem] w-full bg-green text-[1.75rem] text-white">
       <div className="flex justify-between py-[1rem] px-[3rem]">
         <Link href="/">
-          <a>E-Flea</a>
+          <a>
+            E-Flea {session?.user?.id} {session?.user?.name}
+          </a>
         </Link>
         {!session ? (
           <div className="cursor-pointer">
