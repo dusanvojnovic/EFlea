@@ -11,6 +11,7 @@ import { createTRPCNext } from "@trpc/next";
 import type { GetInferenceHelpers } from "@trpc/server";
 
 import type { AppRouter } from "../server/trpc/router/_app";
+import { NextPageContext } from "next";
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
@@ -20,10 +21,20 @@ const getBaseUrl = () => {
 
 const url = `${getBaseUrl()}/api/trpc`;
 
-function getEndingLink() {
+function getEndingLink(ctx: NextPageContext | undefined) {
   if (typeof window === "undefined") {
     return httpBatchLink({
       url,
+      headers() {
+        if (ctx?.req) {
+          // on ssr, forward client's headers to the server
+          return {
+            ...ctx.req.headers,
+            "x-ssr": "1",
+          };
+        }
+        return {};
+      },
     });
   }
 
@@ -49,7 +60,7 @@ export const trpc = createTRPCNext<AppRouter>({
         httpBatchLink({
           url,
         }),
-        getEndingLink(),
+        getEndingLink(ctx),
       ],
       headers() {
         if (ctx?.req) {
