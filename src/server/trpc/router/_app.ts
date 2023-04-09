@@ -4,14 +4,14 @@ import { authRouter } from "./auth";
 import { userRouter } from "./user";
 import { itemRouter } from "./item";
 import { imageRouter } from "./image";
-import { roomRouter } from "./room";
+import { conversationRouter } from "./conversation";
 
 export const appRouter = router({
   auth: authRouter,
   user: userRouter,
   item: itemRouter,
   image: imageRouter,
-  room: roomRouter,
+  conversation: conversationRouter,
 });
 
 // export type definition of API
