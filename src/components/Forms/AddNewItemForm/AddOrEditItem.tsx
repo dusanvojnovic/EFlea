@@ -96,6 +96,15 @@ export const AddOrEditItemForm: React.FunctionComponent<AddOrEditItemProps> = ({
       setFormIsValid(false);
     }
   };
+  trpc.conversation.onCreateConversation.useSubscription(undefined, {
+    onData(data) {
+      console.log(data, "data");
+      // setUserConversations((convs) => [...(convs || []), conversation])
+    },
+    onError(error) {
+      console.error("Subscription error: ", error);
+    },
+  });
 
   return (
     <div className="bg-gray-200 relative	mx-auto my-[15rem] flex w-[40rem] flex-col justify-center rounded-md border-[2px] border-solid border-green p-12 ">
